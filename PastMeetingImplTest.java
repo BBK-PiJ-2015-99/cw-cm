@@ -22,7 +22,11 @@ public class PastMeetingImplTest {
 
     @Test(expected=IllegalArgumentException.class)
     public void idIncorrect(){
+        Contact c1 = new ContactImpl(1, "Mary", " Wathing television");
+        Contact c2 = new ContactImpl(2, "John", "Lion among Tigers");
         LinkedHashSet lhs = new LinkedHashSet();
+        lhs.add(c1);
+        lhs.add(c2);
         Calendar cal = new GregorianCalendar(2015,1,1);            
         PastMeeting pm = new PastMeetingImpl(-1, cal,lhs, "asdasdas" );
     }
@@ -41,7 +45,7 @@ public class PastMeetingImplTest {
 
     @Test
     public void getId(){
-        assertEquals(Integer.valueOf(12), 12);
+        assertEquals(Integer.valueOf(12), Integer.valueOf(pm.getId()));
     }
     
     @Test
@@ -49,4 +53,15 @@ public class PastMeetingImplTest {
         Calendar cal = new GregorianCalendar(2015,1,1);            
         assertEquals(cal,pm.getDate());
     }
+
+    @Test
+    public void getContacts(){
+        Contact c1 = new ContactImpl(1, "Mary", " Wathing television");
+        Contact c2 = new ContactImpl(2, "John", "Lion among Tigers");
+        LinkedHashSet lhs = new LinkedHashSet();
+        lhs.add(c1);
+        lhs.add(c2);
+        assertEquals(lhs, pm.getContacts());
+    }
+
 }
