@@ -13,7 +13,7 @@ public class ContactImpl implements Contact {
         if(id <= 0){
             throw new IllegalArgumentException("Id has to be larger than 0.");
         }
-        if(name = null || notes = null){
+        if(name == null || notes == null){
             throw new NullPointerException("Name or notes supplied are null");
         } 
         this.name = name;        
