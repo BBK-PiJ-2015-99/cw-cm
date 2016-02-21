@@ -14,6 +14,7 @@ public abstract class MeetingImpl implements Meeting {
     private Set<Contact> contacts;
 
     public MeetingImpl(int id, Calendar date,Set<Contact> contacts ){
+
     }
 
     /**
