@@ -21,6 +21,20 @@ public class ContactImplTest {
     @Test
     public void getName(){
         assertEquals("Gene Kranz", contact.getName());
-        assertSame("Chris Kraft", contactSimple.getName());
+        assertEquals("Chris Kraft", contactSimple.getName());
     }
+
+
+    @Test
+    public void getNotes(){
+        assertEquals("Flight Director", contact.getNotes());
+        assertEquals("", contactSimple.getNotes());
+    }
+
+    @Test
+    public void addNotes(){
+        contact.addNotes("For Apollo 13 Mission");
+        assertEquals("Flight DirectorFor Apollo 13 Mission", contact.getNotes());
+    }
+
 }
