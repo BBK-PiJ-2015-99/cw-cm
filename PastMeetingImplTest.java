@@ -38,4 +38,15 @@ public class PastMeetingImplTest {
     public void getNotes(){
         assertEquals("Test note", pm.getNotes());        
     }
+
+    @Test
+    public void getId(){
+        assertEquals(Integer.valueOf(12), 12);
+    }
+    
+    @Test
+    public void getDate(){
+        Calendar cal = new GregorianCalendar(2015,1,1);            
+        assertEquals(cal,pm.getDate());
+    }
 }
