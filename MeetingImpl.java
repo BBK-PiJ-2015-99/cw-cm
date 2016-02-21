@@ -14,7 +14,13 @@ public abstract class MeetingImpl implements Meeting {
     private Set<Contact> contacts;
 
     public MeetingImpl(int id, Calendar date,Set<Contact> contacts ){
-
+        if(date == null || contacts == null)
+            throw new NullPointerException("date or contacts are null");
+        if(id <= 0)
+            throw new IllegalArgumentException("Id is equal to or less than 0");
+        this.id = id;
+        this.date = date;
+        this.contacts = contacts;
     }
 
     /**

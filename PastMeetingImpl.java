@@ -7,11 +7,13 @@ import java.util.Set;
 */
 public class PastMeetingImpl extends MeetingImpl implements PastMeeting {
     
-    String notes;
+    private String notes = "";
 
     public PastMeetingImpl(int id, Calendar date, Set<Contact> contacts, String notes){
-        //test
         super(id, date, contacts);
+        if (notes == null)
+            throw new NullPointerException("Meeting notes null");
+        this.notes = notes;
     }
     /**
     * Returns the notes from the meeting.
@@ -21,6 +23,6 @@ public class PastMeetingImpl extends MeetingImpl implements PastMeeting {
     * @return the notes from the meeting.
     */
     public String getNotes(){
-         return "A RANDOM note";
+        return this.notes;
     }
 }
