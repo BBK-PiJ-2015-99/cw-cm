@@ -29,7 +29,7 @@ public abstract class MeetingImpl implements Meeting {
     * @return the id of the meeting.
     */
     public int getId(){
-        return 1;
+        return this.id;
     }
     /**
     * Return the date of the meeting.
@@ -37,8 +37,7 @@ public abstract class MeetingImpl implements Meeting {
     * @return the date of the meeting.
     */
     public Calendar getDate(){
-       Calendar calendar = new GregorianCalendar(2016,10,1);
-        return calendar;
+        return this.date;
     }
     /**
     * Return the details of people that attended the meeting.
@@ -50,9 +49,6 @@ public abstract class MeetingImpl implements Meeting {
     * @return the details of people that attended the meeting.
     */
     public Set<Contact> getContacts(){
-        LinkedHashSet dummySet = new LinkedHashSet();
-        Contact c = new ContactImpl(1,"test", "test");
-        dummySet.add(c);
-        return dummySet;
+        return this.contacts;
     }
 }
