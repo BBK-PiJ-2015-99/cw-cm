@@ -9,13 +9,18 @@ public class ContactImplTest {
     @Before
     public void initTestContactImpl(){
         contact = new ContactImpl(1, "Gene Kranz", "Flight Director");
-        contactSimple = new ContactImpl(2, "Christ Kraft");
+        contactSimple = new ContactImpl(2, "Chris Kraft");
     }
 
     @Test
     public void getId(){
-        System.out.println("THIS THIS THIS" + contact.getId());
         assertSame(Integer.valueOf(1), contact.getId());
         assertSame(Integer.valueOf(2), contactSimple.getId());
+    }
+
+    @Test
+    public void getName(){
+        assertEquals("Gene Kranz", contact.getName());
+        assertSame("Chris Kraft", contactSimple.getName());
     }
 }
