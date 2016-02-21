@@ -6,11 +6,14 @@ public class ContactImpl implements Contact {
     private String notes="";
     
     public ContactImpl(int id, String name){
-        this.id = id;
-        this.name = name;        
+        this(id, name, "");
     }
 
     public ContactImpl(int id, String name, String notes){
+        if(id <= 0){
+            throw new IllegalArgumentException("Id has to be larger than 0.");
+        }
+        
         this.name = name;        
         this.id = id;
         this.notes = notes;    

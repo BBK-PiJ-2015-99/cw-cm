@@ -36,5 +36,22 @@ public class ContactImplTest {
         contact.addNotes("For Apollo 13 Mission");
         assertEquals("Flight DirectorFor Apollo 13 Mission", contact.getNotes());
     }
+    
+    @Test(expected=IllegalArgumentException.class)
+    public void negativeId(){
+       Contact c = new ContactImpl(-1,"TEST","Test"); 
+    }
 
+    @Test(expected=NullPointerException.class)
+    public void nullName(){
+        Contact c = new ContactImpl(1,null,"test");
+    }
+    @Test(expected=NullPointerException.class)
+    public void nullNote(){
+        Contact c = new ContactImpl(1,"test",null);
+    }
+    @Test(expected=NullPointerException.class)
+    public void nullNoteAndName(){
+        Contact c = new ContactImpl(1,null,null);
+    }
 }
