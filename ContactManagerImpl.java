@@ -45,7 +45,8 @@ public class  ContactManagerImpl implements ContactManager {
     * in the past
     */
     public FutureMeeting getFutureMeeting(int id){
-
+        FutureMeeting fm = new PastMeeting();
+        return PastMeeting;
     }
     /**
     * Returns the meeting with the requested ID, or null if it there is none.

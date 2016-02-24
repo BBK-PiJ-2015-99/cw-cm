@@ -61,6 +61,6 @@ public class PastMeetingImplTest {
         LinkedHashSet lhs = new LinkedHashSet();
         lhs.add(c1);
         lhs.add(c2);
-        ReflectionAssert.assertReflectionEquals((lhs, pm.getContacts());
+        ReflectionAssert.assertReflectionEquals(lhs, pm.getContacts());
     }
 }
