@@ -1,5 +1,6 @@
 import org.junit.*;
 import static org.junit.Assert.*;
+import static org.hamcrest.CoreMatchers.*;
 
 public class ContactImplTest {
 
@@ -53,5 +54,30 @@ public class ContactImplTest {
     @Test(expected=NullPointerException.class)
     public void nullNoteAndName(){
         Contact c = new ContactImpl(1,null,null);
+    }
+    @Test
+    public void objDiffId(){
+        Contact c1 = new ContactImpl(4,"Spielberg", "A director");
+        Contact c2 = new ContactImpl(6,"Spielberg", "A director");
+        assertThat(c1, not(c2));
+    }
+    
+    @Test
+    public void objDiffName(){
+        Contact c1 = new ContactImpl(4,"Spielderg", "A director");
+        Contact c2 = new ContactImpl(6,"Spielberg", "A director");
+        assertThat(c1, not(c2));
+    }
+    @Test
+    public void objDiffComment(){
+        Contact c1 = new ContactImpl(4,"Spielberg", "A director");
+        Contact c2 = new ContactImpl(6,"Spielberg", "A birector");
+        assertThat(c1, not(c2));
+    }
+    @Test
+    public void sameObjectsEqual(){
+        Contact c1 = new ContactImpl(4,"Spielberg", "A director");
+        Contact c2 = new ContactImpl(4,"Spielberg", "A director");
+        assertThat(c1, is(c2));
     }
 }

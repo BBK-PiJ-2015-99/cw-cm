@@ -54,13 +54,4 @@ public class PastMeetingImplTest {
         assertEquals(cal,pm.getDate());
     }
 
-    @Test
-    public void getContacts(){
-        Contact c1 = new ContactImpl(1, "Mary", " Wathing television");
-        Contact c2 = new ContactImpl(2, "John", "Lion among Tigers");
-        LinkedHashSet lhs = new LinkedHashSet();
-        lhs.add(c1);
-        lhs.add(c2);
-        ReflectionAssert.assertReflectionEquals(lhs, pm.getContacts());
-    }
 }
