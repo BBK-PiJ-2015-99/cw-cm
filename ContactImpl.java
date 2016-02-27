@@ -34,5 +34,19 @@ public class ContactImpl implements Contact {
     public void addNotes(String note){
         this.notes+=note;
     }
+    
+    @Override
+    public boolea(Object obj){
+        if(obj == null) {
+            return false;
+        }
+        if(!ContactImpl.class.isAssignableFrom(obj.getClass())){
+            return false;
+        }
+        final ContactImpl cntImpl = (ContactImpl) obj;
 
+
+
+
+    }
 }
