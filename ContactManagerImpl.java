@@ -191,6 +191,8 @@ public class  ContactManagerImpl implements ContactManager {
         int newHighestContactId = highestContactId +1;
         Contact newContact = new ContactImpl(newHighestContactId, name, notes);
         contacts.add(newContact);
+        System.out.println("HighestID:" +  highestContactId);
+        System.out.println("contacts size:" +  contacts.size());
         highestContactId = newHighestContactId;
         return newHighestContactId;
     }
@@ -263,15 +265,20 @@ public class  ContactManagerImpl implements ContactManager {
 
     private void loadContacts(){
         try(BufferedReader br = new BufferedReader(new FileReader("Contacts.csv"))){
-            String line;
             int id;
             String name;
             String notes;
             Pattern pattern = Pattern.compile("^\"(\\d+)\",\"(.*)\",\"(.*)\"$");
+            String line = br.readLine(); //discard first line
             while((line = br.readLine()) != null) {
                 Matcher matcher = pattern.matcher(line);
-                Contact newContact = new ContactImpl( Integer.parseInt(matcher.group(1)), matcher.group(2), matcher.group(3));
-                contacts.add(newContact);
+                if(matcher.matches()){
+                    Contact newContact = new ContactImpl( Integer.parseInt(matcher.group(1)), matcher.group(2), matcher.group(3));
+                    contacts.add(newContact);
+                    System.out.println();
+                } else {
+                    System.out.println("Could not load line:" + line);
+                }
             }
         } catch (FileNotFoundException ex) {
             //do nothing -- there is not file yet to read. 
