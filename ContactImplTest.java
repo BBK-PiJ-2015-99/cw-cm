@@ -43,6 +43,10 @@ public class ContactImplTest {
        Contact c = new ContactImpl(-1,"TEST","Test"); 
     }
 
+    @Test(expected=IllegalArgumentException.class)
+    public void nullId(){
+       Contact c = new ContactImpl(null,"TEST","Test"); 
+    }
     @Test(expected=NullPointerException.class)
     public void nullName(){
         Contact c = new ContactImpl(1,null,"test");

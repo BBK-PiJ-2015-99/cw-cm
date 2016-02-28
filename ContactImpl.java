@@ -36,17 +36,30 @@ public class ContactImpl implements Contact {
     }
     
     @Override
-    public boolea(Object obj){
+    public boolean equals(Object obj){
         if(obj == null) {
             return false;
         }
         if(!ContactImpl.class.isAssignableFrom(obj.getClass())){
             return false;
         }
-        final ContactImpl cntImpl = (ContactImpl) obj;
-
-
-
-
+        final Contact other = (ContactImpl) obj;
+        //check that fields in both objects are the same. Id and name can't be null. 
+        if (!(this.getId() == other.getId()))
+            return false;
+        if(!(this.getName() == other.getName()))
+            return false;
+        if( (this.getNotes() == null) ? (other.getNotes() != null) : !this.getNotes().equals(other.getNotes()))
+            return false;  
+        return true;
     }
+
+    @Override
+    public int hashCode(){
+    
+        int hash = 3;
+        hash = 53 * hash + this.getId() + this.getName().hashCode() + (this.getNotes() != null ? this.getNotes().hashCode() : 0); 
+        return hash;
+    }
+
 }
