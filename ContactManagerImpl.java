@@ -1,6 +1,9 @@
 import java.util.Calendar;
 import java.util.List;
+import java.util.LinkedList;
 import java.util.Set;
+import java.util.LinkedHashSet;
+import java.util.Calendar;
 /**
 * A class to manage your contacts and meetings.
 */
@@ -19,7 +22,7 @@ public class  ContactManagerImpl implements ContactManager {
     * @throws NullPointerException if the meeting or the date are null
     */
     public int addFutureMeeting(Set<Contact> contacts, Calendar date){
-
+        return 4;
 
     }
     /**
@@ -33,8 +36,10 @@ public class  ContactManagerImpl implements ContactManager {
     * in the future
     */
     public PastMeeting getPastMeeting(int id){
-
-
+        Set<Contact> dummySet = new LinkedHashSet(); 
+        Calendar cal = Calendar.getInstance();
+        PastMeeting dummyMeeting = new PastMeetingImpl(3, cal, dummySet , "notes");
+        return dummyMeeting;
     }
     /**
     * Returns the FUTURE meeting with the requested ID, or null if there is none.
@@ -45,8 +50,11 @@ public class  ContactManagerImpl implements ContactManager {
     * in the past
     */
     public FutureMeeting getFutureMeeting(int id){
-        FutureMeeting fm = new PastMeeting();
-        return PastMeeting;
+        // TODO -- Dummy code 
+        Set<Contact> dummySet = new LinkedHashSet(); 
+        Calendar cal = Calendar.getInstance();
+        FutureMeeting dummyMeeting = (FutureMeeting) new PastMeetingImpl(3, cal, dummySet , "notes");
+        return dummyMeeting;
     }
     /**
     * Returns the meeting with the requested ID, or null if it there is none.
@@ -56,6 +64,11 @@ public class  ContactManagerImpl implements ContactManager {
     */
     public Meeting getMeeting(int id){
 
+        // TODO -- Dummy code 
+        Set<Contact> dummySet = new LinkedHashSet(); 
+        Calendar cal = Calendar.getInstance();
+        FutureMeeting dummyMeeting = (FutureMeeting) new PastMeetingImpl(3, cal, dummySet , "notes");
+        return dummyMeeting;
     }
     /**
     * Returns the list of future meetings scheduled with this contact.
@@ -70,7 +83,8 @@ public class  ContactManagerImpl implements ContactManager {
     * @throws NullPointerException if the contact is null
     */
     public List<Meeting> getFutureMeetingList(Contact contact){
-    
+        List<Meeting> dummySet = new LinkedList(); 
+        return dummySet;
     }
     /**
     * Returns the list of meetings that are scheduled for, or that took
@@ -85,7 +99,8 @@ public class  ContactManagerImpl implements ContactManager {
     * @throws NullPointerException if the date are null
     */
     public List<Meeting> getMeetingListOn(Calendar date){
-
+        List<Meeting> dummySet = new LinkedList(); 
+        return dummySet;
     }
     /**
     * Returns the list of past meetings in which this contact has participated.
@@ -100,6 +115,8 @@ public class  ContactManagerImpl implements ContactManager {
     * @throws NullPointerException if the contact is null
     */
     public List<PastMeeting> getPastMeetingListFor(Contact contact){
+        List<PastMeeting> dummySet = new LinkedList(); 
+        return dummySet;
     }
     /**
     * Create a new record for a meeting that took place in the past.
@@ -129,7 +146,14 @@ public class  ContactManagerImpl implements ContactManager {
     * @throws IllegalStateException if the meeting is set for a date in the future
     * @throws NullPointerException if the notes are null
     */
-    PastMeeting addMeetingNotes(int id, String text);
+    public PastMeeting addMeetingNotes(int id, String text){
+
+        // TODO -- Dummy code 
+        Set<Contact> dummySet = new LinkedHashSet(); 
+        Calendar cal = Calendar.getInstance();
+        PastMeeting dummyMeeting = new PastMeetingImpl(3, cal, dummySet , "notes");
+        return dummyMeeting;
+    }
     /**
     * Create a new contact with the specified name and notes.
     *
@@ -154,6 +178,8 @@ public class  ContactManagerImpl implements ContactManager {
     */
     public Set<Contact> getContacts(String name){
 
+        Set<Contact> dummySet = new LinkedHashSet(); 
+        return dummySet;
     }
     /**
     * Returns a list containing the contacts that correspond to the IDs.
@@ -166,6 +192,8 @@ public class  ContactManagerImpl implements ContactManager {
     */
     public Set<Contact> getContacts(int... ids){
 
+        Set<Contact> dummySet = new LinkedHashSet(); 
+        return dummySet;
     }
     /**
     * Save all data to disk.
@@ -173,6 +201,6 @@ public class  ContactManagerImpl implements ContactManager {
     * This method must be executed when the program is
     * closed and when/if the user requests it.
     */
-    void flush(){
+    public void flush(){
     }
 }
