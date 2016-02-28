@@ -1,3 +1,4 @@
+import java.lang.IllegalArgumentException;
 import java.util.Calendar;
 import java.util.List;
 import java.util.LinkedList;
@@ -8,6 +9,15 @@ import java.util.Calendar;
 * A class to manage your contacts and meetings.
 */
 public class  ContactManagerImpl implements ContactManager {
+    
+    private List<Contact> contacts;
+    private int highestContactId;
+
+    public ContactManagerImpl(){
+        contacts = new LinkedList();
+        //TODO: add contacts from file. Get highest ID
+        highestContactId = 0;
+    }
     /**
     * Add a new meeting to be held in the future.
     *
@@ -164,7 +174,15 @@ public class  ContactManagerImpl implements ContactManager {
     * @throws NullPointerException if the name or the notes are null
     */
     public int addNewContact(String name, String notes){
-        return 1;
+        if(name.equals("") || notes.equals(""))
+            throw new IllegalArgumentException("Name and notes cannot be null");
+        if(name == null || notes == null)
+            throw new NullPointerException("Name and notes cannot be null");
+        int newHighestContactId = highestContactId +1;
+        Contact newContact = new ContactImpl(newHighestContactId, name, notes);
+        contacts.add(newContact);
+        highestContactId = newHighestContactId;
+        return newHighestContactId;
     }
     /**
     * Returns a list with the contacts whose name contains that string.
@@ -177,9 +195,13 @@ public class  ContactManagerImpl implements ContactManager {
     * @throws NullPointerException if the parameter is null
     */
     public Set<Contact> getContacts(String name){
-
-        Set<Contact> dummySet = new LinkedHashSet(); 
-        return dummySet;
+        Set<Contact> returnSet = new LinkedHashSet(); 
+        for(int i=1; i<=highestContactId; i++){
+            if ( name.equals(contacts.get(i-1).getName())){
+                returnSet.add( contacts.get(i-1) ); 
+          }        
+        }
+        return returnSet;
     }
     /**
     * Returns a list containing the contacts that correspond to the IDs.
@@ -191,9 +213,17 @@ public class  ContactManagerImpl implements ContactManager {
     * any of the provided IDs does not correspond to a real contact
     */
     public Set<Contact> getContacts(int... ids){
-
-        Set<Contact> dummySet = new LinkedHashSet(); 
-        return dummySet;
+        List<Integer> argIds = new LinkedList();
+        for (int id : ids){
+            argIds.add(id);
+        }
+        Set<Contact> returnSet = new LinkedHashSet(); 
+        for(int i=1; i<=highestContactId; i++){
+            if ( argIds.contains(i)){
+                returnSet.add( contacts.get(i-1) ); 
+            }        
+        }   
+        return returnSet;    
     }
     /**
     * Save all data to disk.
