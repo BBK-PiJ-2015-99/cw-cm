@@ -67,4 +67,15 @@ public class ContactManagerImplTest {
         assertThat(contactsByName, is(contactsById));
     }
 
+    @Test 
+    public void flushContacts(){
+        int id = cm.addNewContact("John", "Engineer");
+        int id2 = cm.addNewContact("John", "Engineer");
+        int id3 = cm.addNewContact("John", "Engineer");
+        cm.flush();
+        ContactManager cm2 = new ContactManagerImpl();
+        Set<Contact> cmContacts = cm.getContacts("John");
+        Set<Contact> cm2Contacts = cm2.getContacts("John");
+        assertThat(cmContacts, is(cm2Contacts));
+    }
 }

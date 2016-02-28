@@ -1,4 +1,12 @@
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.PrintWriter;
+import java.lang.StringBuilder;
 import java.lang.IllegalArgumentException;
+import java.io.IOException;
 import java.util.Calendar;
 import java.util.List;
 import java.util.LinkedList;
@@ -16,7 +24,9 @@ public class  ContactManagerImpl implements ContactManager {
     public ContactManagerImpl(){
         contacts = new LinkedList();
         //TODO: add contacts from file. Get highest ID
-        highestContactId = 0;
+        loadContacts();
+        //What happens if there is no file to load? Check for in loaContacts
+       // highestContactId = 0; -- this should be set in loadContacts
     }
     /**
     * Add a new meeting to be held in the future.
@@ -232,5 +242,42 @@ public class  ContactManagerImpl implements ContactManager {
     * closed and when/if the user requests it.
     */
     public void flush(){
+       flushContacts(); 
     }
+
+    private void flushContacts(){
+        StringBuilder fileContents = new StringBuilder();
+        fileContents.append("`id`,`name`,`notes`".replace('`','"' ) + System.lineSeparator());
+        for(int i=0; i<=contacts.size()-1; i++){
+            fileContents.append("\"" + contacts.get(i).getId()  + "\",");
+            fileContents.append("\"" + contacts.get(i).getName()  + "\",");
+            fileContents.append("\"" + contacts.get(i).getNotes()  + "\"" + System.lineSeparator());
+        } 
+        try(PrintWriter writer = new PrintWriter("Contacts.csv")){
+            writer.print(fileContents);
+            writer.flush();        
+        } catch ( FileNotFoundException ex) {
+            System.out.println("Can't open file (Contacts.csv) to write contacts.");
+        }
+    }
+
+    private void loadContacts(){
+        try(BufferedReader br = new BufferedReader(new FileReader("Contacts.csv"))){
+            String line;
+            int id;
+            String name;
+            String notes;
+            Pattern pattern = Pattern.compile("^\"(\\d+)\",\"(.*)\",\"(.*)\"$");
+            while((line = br.readLine()) != null) {
+                Matcher matcher = pattern.matcher(line);
+                Contact newContact = new ContactImpl( Integer.parseInt(matcher.group(1)), matcher.group(2), matcher.group(3));
+                contacts.add(newContact);
+            }
+        } catch (FileNotFoundException ex) {
+            //do nothing -- there is not file yet to read. 
+        } catch  (IOException ex) {
+            ex.printStackTrace();
+        }
+    }
+
 }
