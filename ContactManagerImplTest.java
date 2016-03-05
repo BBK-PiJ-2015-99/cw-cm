@@ -3,6 +3,9 @@ import static org.junit.Assert.*;
 import java.util.Set;
 import java.util.HashSet;
 import static org.hamcrest.CoreMatchers.*;
+import java.io.File;
+import java.nio.file.Files;
+import java.io.IOException;
 
 public class ContactManagerImplTest {
 
@@ -11,6 +14,14 @@ public class ContactManagerImplTest {
 
     @Before 
     public void initTest(){
+        try{
+            File f = new File("Contacts.csv");
+            boolean result = Files.deleteIfExists(f.toPath());
+            if(result)
+                System.out.println("Deleted an existing Contacts file.");
+        } catch (IOException io){
+            
+        } 
         cm = new ContactManagerImpl();
     }
 
@@ -75,7 +86,9 @@ public class ContactManagerImplTest {
         cm.flush();
         ContactManager cm2 = new ContactManagerImpl();
         Set<Contact> cmContacts = cm.getContacts("John");
+        System.out.println("Size of old set:" + cmContacts.size());
         Set<Contact> cm2Contacts = cm2.getContacts("John");
+        System.out.println("Size of enew one after loading:" + cm2Contacts.size());
         assertThat(cmContacts, is(cm2Contacts));
     }
 }

@@ -191,8 +191,6 @@ public class  ContactManagerImpl implements ContactManager {
         int newHighestContactId = highestContactId +1;
         Contact newContact = new ContactImpl(newHighestContactId, name, notes);
         contacts.add(newContact);
-        System.out.println("HighestID:" +  highestContactId);
-        System.out.println("contacts size:" +  contacts.size());
         highestContactId = newHighestContactId;
         return newHighestContactId;
     }
@@ -272,16 +270,18 @@ public class  ContactManagerImpl implements ContactManager {
             String line = br.readLine(); //discard first line
             while((line = br.readLine()) != null) {
                 Matcher matcher = pattern.matcher(line);
+                System.out.println("READING A LINE -- READING SAVED CONTACTS");
                 if(matcher.matches()){
                     Contact newContact = new ContactImpl( Integer.parseInt(matcher.group(1)), matcher.group(2), matcher.group(3));
                     contacts.add(newContact);
-                    System.out.println();
+                    highestContactId+=1;
+                    System.out.println("Size of contacts:" + contacts.size());
                 } else {
                     System.out.println("Could not load line:" + line);
                 }
             }
         } catch (FileNotFoundException ex) {
-            //do nothing -- there is not file yet to read. 
+            //do nothing -- there is no file yet to read. 
         } catch  (IOException ex) {
             ex.printStackTrace();
         }
