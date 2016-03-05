@@ -22,6 +22,7 @@ public class  ContactManagerImpl implements ContactManager {
     private int highestContactId;
 
     public ContactManagerImpl(){
+        highestContactId = 0;
         contacts = new LinkedList();
         //TODO: add contacts from file. Get highest ID
         loadContacts();
@@ -268,18 +269,23 @@ public class  ContactManagerImpl implements ContactManager {
             String notes;
             Pattern pattern = Pattern.compile("^\"(\\d+)\",\"(.*)\",\"(.*)\"$");
             String line = br.readLine(); //discard first line
+            int highestContactIdInFile = -1;
             while((line = br.readLine()) != null) {
                 Matcher matcher = pattern.matcher(line);
                 System.out.println("READING A LINE -- READING SAVED CONTACTS");
                 if(matcher.matches()){
+                    int entryId = Integer.parseInt(matcher.group(1));
+                    if (entryId > highestContactIdInFile)
+                        highestContactIdInFile = entryId;
                     Contact newContact = new ContactImpl( Integer.parseInt(matcher.group(1)), matcher.group(2), matcher.group(3));
                     contacts.add(newContact);
-                    highestContactId+=1;
+                    System.out.println("HIhgest id seen so far:" + highestContactIdInFile);
                     System.out.println("Size of contacts:" + contacts.size());
                 } else {
                     System.out.println("Could not load line:" + line);
                 }
             }
+            highestContactId = highestContactIdInFile;
         } catch (FileNotFoundException ex) {
             //do nothing -- there is no file yet to read. 
         } catch  (IOException ex) {

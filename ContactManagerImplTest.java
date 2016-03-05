@@ -89,6 +89,17 @@ public class ContactManagerImplTest {
         System.out.println("Size of old set:" + cmContacts.size());
         Set<Contact> cm2Contacts = cm2.getContacts("John");
         System.out.println("Size of enew one after loading:" + cm2Contacts.size());
-        assertThat(cmContacts, is(cm2Contacts));
+        System.out.println(" ARE THE TWO SETS EQUALS");
+        System.out.println(cmContacts.equals(cm2Contacts));
+        System.out.println(cm2Contacts.equals(cmContacts));
+        System.out.println(cmContacts.contains(cm2Contacts));
+        for(Contact c: cmContacts){
+            System.out.println(c.getId() + "--" + c.getName() + "--" + c.getNotes()  );
+        }
+
+        for(Contact c: cm2Contacts){
+            System.out.println(c.getId() + "--" + c.getName() + "--" + c.getNotes()  );
+        }
+        assertTrue(cmContacts.contains(cm2Contacts));
     }
 }

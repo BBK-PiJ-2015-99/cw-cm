@@ -1,6 +1,11 @@
 import org.junit.*;
 import static org.junit.Assert.*;
 import static org.hamcrest.CoreMatchers.*;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.Set;
+import java.util.List;
+import java.util.LinkedList;
 
 public class ContactImplTest {
 
@@ -71,13 +76,50 @@ public class ContactImplTest {
     @Test
     public void objDiffComment(){
         Contact c1 = new ContactImpl(4,"Spielberg", "A director");
-        Contact c2 = new ContactImpl(6,"Spielberg", "A birector");
+        Contact c2 = new ContactImpl(4,"Spielberg", "A birector");
         assertThat(c1, not(c2));
     }
     @Test
     public void sameObjectsEqual(){
         Contact c1 = new ContactImpl(4,"Spielberg", "A director");
         Contact c2 = new ContactImpl(4,"Spielberg", "A director");
-        assertThat(c1, is(c2));
+        assertEquals(c1, c2);
+        //assertThat(c1, is(c2));
+    }
+    @Test
+    public void equalSets(){
+        Contact c1 = new ContactImpl(4,"Spielberg", "A director");
+        Contact c2 = new ContactImpl(5,"Underwood", "A politician");
+
+        Contact c3 = new ContactImpl(4,"Spielberg", "A director");
+        Contact c4 = new ContactImpl(5,"Underwood", "A politician");
+
+        Set<Contact> s1 = new LinkedHashSet();
+        Set<Contact> s2 = new LinkedHashSet();
+        s1.add(c1);
+        s1.add(c2);
+    
+        s2.add(c3);
+        s2.add(c4);
+
+        assertEquals(s1, s2);
+    }
+    @Test
+    public void equalLists(){
+        Contact c1 = new ContactImpl(4,"Spielberg", "A director");
+        Contact c2 = new ContactImpl(5,"Underwood", "A politician");
+
+        Contact c3 = new ContactImpl(4,"Spielberg", "A director");
+        Contact c4 = new ContactImpl(5,"Underwood", "A politician");
+
+        List l1 = new LinkedList();
+        List l2 = new LinkedList();
+        l1.add(c1);
+        l1.add(c2);
+    
+        l2.add(c3);
+        l2.add(c4);
+
+        assertEquals(l1, l2);
     }
 }
