@@ -45,10 +45,14 @@ public class ContactImpl implements Contact {
         }
         final Contact other = (ContactImpl) obj;
         //check that fields in both objects are the same. Id and name can't be null. 
-        if (!(this.getId() == other.getId()))
+        if (!(this.getId() == other.getId())){
+            System.out.println("id:" + this.getId() + "--" + other.getId());
             return false;
-        if(!(this.getName() == other.getName()))
+        }
+        if(!this.getName().equals(other.getName())){
+            System.out.println("id:" + this.getName() + "--" + other.getName());
             return false;
+        }
         return true;
     }
 

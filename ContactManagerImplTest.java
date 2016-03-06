@@ -87,45 +87,8 @@ public class ContactManagerImplTest {
         cm.flush();
         ContactManager cm2 = new ContactManagerImpl();
         Set<Contact> cmContacts = cm.getContacts("John");
-        System.out.println("Size of old set:" + cmContacts.size());
         Set<Contact> cm2Contacts = cm2.getContacts("John");
-        System.out.println("Size of enew one after loading:" + cm2Contacts.size());
-        System.out.println(" ARE THE TWO SETS EQUALS");
-        System.out.println("cmContacts.equals(cm2Contacts):" + cmContacts.equals(cm2Contacts));
-        System.out.println("cm2Contacts.equals(cmContacts):" + cm2Contacts.equals(cmContacts));
-        System.out.println("compare hash codes:" + ( cm2Contacts.hashCode() == cmContacts.hashCode() ) );
 
-        for(Contact c: cmContacts){
-            System.out.println(c.getId() + "--" + c.getName() + "--" + c.hashCode() +  "--" + cmContacts.hashCode() );
-        }
-        for(Contact c: cm2Contacts){
-            System.out.println(c.getId() + "--" + c.getName() + "--" + c.hashCode() +  "--" + cm2Contacts.hashCode() );
-        }
-        Contact c1 = new ContactImpl(4,"Spielberg", "A director");
-        Contact c2 = new ContactImpl(5,"Underwood", "A politician");
-
-        Contact c3 = new ContactImpl(4,"Spielberg", "A director");
-        Contact c4 = new ContactImpl(5,"Underwood", "A politician");
-
-        Set<Contact> s1 = new LinkedHashSet();
-        Set<Contact> s2 = new LinkedHashSet();
-        s1.add(c1);
-        s1.add(c2);
-
-        s2.add(c3);
-        s2.add(c4);
-        //assertEquals(s1, s2);
-
-        System.out.println("CHECK ContactImpl tests");
-        System.out.println(s1.equals(s2));
-        System.out.println(s2.equals(s1));
-
-        for(Contact c: s1){
-            System.out.println(c.getId() + "--" + c.getName() + "--" + c.hashCode() + "--" + s1.hashCode() );
-        }
-        for(Contact c: s2){
-            System.out.println(c.getId() + "--" + c.getName() + "--" + c.hashCode() + "--" + s2.hashCode() );
-        }
-        assertEquals(cmContacts,cm2Contacts);
+        assertTrue(cmContacts.equals(cm2Contacts));
     }
 }

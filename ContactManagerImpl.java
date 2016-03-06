@@ -272,15 +272,12 @@ public class  ContactManagerImpl implements ContactManager {
             int highestContactIdInFile = -1;
             while((line = br.readLine()) != null) {
                 Matcher matcher = pattern.matcher(line);
-                System.out.println("READING A LINE -- READING SAVED CONTACTS");
                 if(matcher.matches()){
                     int entryId = Integer.parseInt(matcher.group(1));
                     if (entryId > highestContactIdInFile)
                         highestContactIdInFile = entryId;
                     Contact newContact = new ContactImpl( entryId, matcher.group(2), matcher.group(3));
                     contacts.add(newContact);
-                    System.out.println("HIhgest id seen so far:" + highestContactIdInFile);
-                    System.out.println("Size of contacts:" + contacts.size());
                 } else {
                     System.out.println("Could not load line:" + line);
                 }
