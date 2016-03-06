@@ -116,7 +116,7 @@ public class ContactManagerImplTest {
         Set<Contact> cmContacts = cm.getContacts(id, id2, id3);
         Calendar cal = Calendar.getInstance(tz1, locale1);
         cal.set(2016, 7, 12);
-        //int meetingId = cm.addFutureMeeting(cmContacts, cal);
+        int meetingId = cm.addFutureMeeting(cmContacts, cal);
         //retrievedFutureMeeting = cm.getFutureMeeting(meetingId);
         assertTrue(true);
     }
