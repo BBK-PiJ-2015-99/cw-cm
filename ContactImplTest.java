@@ -1,5 +1,4 @@
 
-package com.asfaha;
 
 import org.junit.*;
 import static org.junit.Assert.*;
