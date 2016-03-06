@@ -119,7 +119,6 @@ public class ContactManagerImplTest {
         cal.set(2015, 7, 12);
         Set<Contact> cmContacts = new LinkedHashSet();
         cm.addFutureMeeting(cmContacts,cal );
-        
     }
  
     @Test(expected=IllegalArgumentException.class)
@@ -133,6 +132,7 @@ public class ContactManagerImplTest {
         Locale locale1 = Locale.UK;
         TimeZone tz1 = TimeZone.getTimeZone("GMT");
         Calendar cal = Calendar.getInstance(tz1, locale1);
+
         cal.set(2016, 7, 12);
         cm.addFutureMeeting(nonExistantContact,cal );
     }
