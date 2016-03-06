@@ -1,12 +1,18 @@
-import org.junit.*;
-import static org.junit.Assert.*;
+
+
 import java.util.Set;
 import java.util.HashSet;
 import static org.hamcrest.CoreMatchers.*;
+import org.junit.*;
+import static org.junit.Assert.*;
 import java.io.File;
 import java.nio.file.Files;
 import java.io.IOException;
 import java.util.LinkedHashSet;
+import java.util.Calendar; 
+import java.util.Locale;
+import java.util.TimeZone;
+import static FutureMeetingMatcher.*;
 
 public class ContactManagerImplTest {
 
@@ -88,7 +94,34 @@ public class ContactManagerImplTest {
         ContactManager cm2 = new ContactManagerImpl();
         Set<Contact> cmContacts = cm.getContacts("John");
         Set<Contact> cm2Contacts = cm2.getContacts("John");
-
-        assertTrue(cmContacts.equals(cm2Contacts));
+        assertThat(cmContacts, is(cm2Contacts));
     }
+    @Test 
+    public void flushContactsQuotesNewLineInName(){
+        int id = cm.addNewContact("Joi\thn", "Engineer");
+        int id2 = cm.addNewContact("Jo\"hn", "Engineer");
+        int id3 = cm.addNewContact("Joh\nn", "Engineer");
+        cm.flush();
+        ContactManager cm2 = new ContactManagerImpl();
+        Set<Contact> cmContacts = cm.getContacts(id, id2, id3);
+        Set<Contact> cm2Contacts = cm2.getContacts(id, id2, id3);
+        assertThat(cm2Contacts, is(cmContacts));
+    }
+    @Test
+    public void createMeeting(){
+        Locale locale1 = Locale.UK;
+        TimeZone tz1 = TimeZone.getTimeZone("GMT");
+        int id = cm.addNewContact("John", "Engineer");
+        int id2 = cm.addNewContact("John", "Engineer");
+        int id3 = cm.addNewContact("John", "Engineer");
+        Set<Contact> cmContacts = cm.getContacts(id, id2, id3);
+        Calendar cal = Calendar.getInstance(tz1, locale1);
+        cal.set(2016, 7, 12);
+        int meetingId = cm.addFutureMeeting(cmContacts, cal);
+        FutureMeeting retrievedFutureMeeting = cm.getFutureMeeting(meetingId);
+        assertThat(retrievedFutureMeeting, hasId(meetingId));
+    }
+    
+
+    
 }

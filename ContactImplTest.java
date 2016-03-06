@@ -1,3 +1,6 @@
+
+package com.asfaha;
+
 import org.junit.*;
 import static org.junit.Assert.*;
 import static org.hamcrest.CoreMatchers.*;
@@ -114,5 +117,10 @@ public class ContactImplTest {
         l2.add(c4);
 
         assertEquals(l1, l2);
+    }
+    @Test
+    public void checkToString(){
+        Contact c1 = new ContactImpl(4,"Spielberg", "A director");
+        assertEquals( "4--Spielberg--A director", c1.toString());
     }
 }

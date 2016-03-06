@@ -1,3 +1,5 @@
+
+
 public class ContactImpl implements Contact {
 
 
@@ -46,11 +48,9 @@ public class ContactImpl implements Contact {
         final Contact other = (ContactImpl) obj;
         //check that fields in both objects are the same. Id and name can't be null. 
         if (!(this.getId() == other.getId())){
-            System.out.println("id:" + this.getId() + "--" + other.getId());
             return false;
         }
         if(!this.getName().equals(other.getName())){
-            System.out.println("id:" + this.getName() + "--" + other.getName());
             return false;
         }
         return true;
@@ -63,5 +63,8 @@ public class ContactImpl implements Contact {
         hash = 53 * hash + this.getId() + this.getName().hashCode() ; 
         return hash;
     }
-
+    @Override
+    public String toString(){
+        return this.getId() + "--"  + this.getName() + "--" + this.getNotes();
+    }
 }

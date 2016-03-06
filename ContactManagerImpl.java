@@ -1,3 +1,5 @@
+
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.io.BufferedReader;
@@ -43,6 +45,7 @@ public class  ContactManagerImpl implements ContactManager {
     * @throws NullPointerException if the meeting or the date are null
     */
     public int addFutureMeeting(Set<Contact> contacts, Calendar date){
+        
         return 4;
 
     }
@@ -251,7 +254,7 @@ public class  ContactManagerImpl implements ContactManager {
         fileContents.append("`id`,`name`,`notes`".replace('`','"' ) + System.lineSeparator());
         for(int i=0; i<=contacts.size()-1; i++){
             fileContents.append("\"" + contacts.get(i).getId()  + "\",");
-            fileContents.append("\"" + contacts.get(i).getName()  + "\",");
+            fileContents.append("\"" + contacts.get(i).getName().replace("\n", "\\n")  + "\",");
             fileContents.append("\"" + contacts.get(i).getNotes()  + "\"" + System.lineSeparator());
         } 
         try(PrintWriter writer = new PrintWriter("Contacts.csv")){
@@ -274,9 +277,10 @@ public class  ContactManagerImpl implements ContactManager {
                 Matcher matcher = pattern.matcher(line);
                 if(matcher.matches()){
                     int entryId = Integer.parseInt(matcher.group(1));
+                    String nameFromFile = matcher.group(2).replace("\\n", "\n");
                     if (entryId > highestContactIdInFile)
                         highestContactIdInFile = entryId;
-                    Contact newContact = new ContactImpl( entryId, matcher.group(2), matcher.group(3));
+                    Contact newContact = new ContactImpl( entryId, nameFromFile, matcher.group(3));
                     contacts.add(newContact);
                 } else {
                     System.out.println("Could not load line:" + line);
