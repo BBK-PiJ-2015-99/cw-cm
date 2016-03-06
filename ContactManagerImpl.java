@@ -19,13 +19,17 @@ import java.util.Calendar;
 * A class to manage your contacts and meetings.
 */
 public class  ContactManagerImpl implements ContactManager {
-    
+   
+    private List<FutureMeeting> futureMeetings; 
     private List<Contact> contacts;
     private int highestContactId;
+    private int highestFutureMeetingId;
 
     public ContactManagerImpl(){
         highestContactId = 0;
+        highestFutureMeetingId = 0;
         contacts = new LinkedList();
+        futureMeetings = new LinkedList();
         //TODO: add contacts from file. Get highest ID
         loadContacts();
         //What happens if there is no file to load? Check for in loaContacts
@@ -45,9 +49,11 @@ public class  ContactManagerImpl implements ContactManager {
     * @throws NullPointerException if the meeting or the date are null
     */
     public int addFutureMeeting(Set<Contact> contacts, Calendar date){
-        
-        return 4;
-
+        int newHighestFutureMeetingid = highestFutureMeetingId + 1;
+        /* if (date == null)
+            throw new IllegalArgumentException("Date supplied is null");
+        */
+        return 34;    
     }
     /**
     * Returns the PAST meeting with the requested ID, or null if it there is none.
@@ -62,7 +68,7 @@ public class  ContactManagerImpl implements ContactManager {
     public PastMeeting getPastMeeting(int id){
         Set<Contact> dummySet = new LinkedHashSet(); 
         Calendar cal = Calendar.getInstance();
-        PastMeeting dummyMeeting = new PastMeetingImpl(3, cal, dummySet , "notes");
+        PastMeeting dummyMeeting = new PastMeetingImpl(3, cal, dummySet, "notes" );
         return dummyMeeting;
     }
     /**
@@ -77,7 +83,9 @@ public class  ContactManagerImpl implements ContactManager {
         // TODO -- Dummy code 
         Set<Contact> dummySet = new LinkedHashSet(); 
         Calendar cal = Calendar.getInstance();
-        FutureMeeting dummyMeeting = (FutureMeeting) new PastMeetingImpl(3, cal, dummySet , "notes");
+        System.out.println("i-------> Running here!");
+        FutureMeeting dummyMeeting = new FutureMeetingImpl(3, cal, dummySet );
+        System.out.println("i-------> After casting!");
         return dummyMeeting;
     }
     /**

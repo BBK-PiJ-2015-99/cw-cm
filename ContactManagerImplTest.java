@@ -106,21 +106,53 @@ public class ContactManagerImplTest {
         Set<Contact> cm2Contacts = cm2.getContacts(id, id2, id3);
         assertThat(cm2Contacts, is(cmContacts));
     }
+
+    @Test(expected=NullPointerException.class)
+    public void addFutureNullDate (){
+        Set<Contact> cmContacts = new LinkedHashSet();
+        cm.addFutureMeeting(cmContacts,null );
+    }
+
+    @Test(expected=IllegalArgumentException.class)
+    public void addFutureMeetingPastDate(){
+        //Locale locale1 = Locale.UK;
+        //TimeZone tz1 = TimeZone.getTimeZone("GMT");
+        Calendar cal = Calendar.getInstance();
+        cal.set(2015, 7, 12);
+        Set<Contact> cmContacts = new LinkedHashSet();
+        cm.addFutureMeeting(cmContacts,cal );
+        
+    }
+ 
+    @Test(expected=IllegalArgumentException.class)
+    public void addFutureMeetingNonExistantContact(){
+        int id = cm.addNewContact("Joihn", "Engineer");
+        int id2 = cm.addNewContact("John", "Engineer");
+        int id3 = cm.addNewContact("John", "Engineer");
+        Set<Contact> nonExistantContact  = new LinkedHashSet();
+        Contact newContact = new ContactImpl(444, "Llewyn", "The protagonist of a movie I once watched");
+        nonExistantContact.add(newContact);
+        Locale locale1 = Locale.UK;
+        TimeZone tz1 = TimeZone.getTimeZone("GMT");
+        Calendar cal = Calendar.getInstance(tz1, locale1);
+        cal.set(2016, 7, 12);
+        cm.addFutureMeeting(nonExistantContact,cal );
+    }
+
     @Test
     public void createMeeting(){
         Locale locale1 = Locale.UK;
         TimeZone tz1 = TimeZone.getTimeZone("GMT");
+        Calendar cal = Calendar.getInstance(tz1, locale1);
+        cal.set(2016, 7, 12);
         int id = cm.addNewContact("John", "Engineer");
         int id2 = cm.addNewContact("John", "Engineer");
         int id3 = cm.addNewContact("John", "Engineer");
         Set<Contact> cmContacts = cm.getContacts(id, id2, id3);
-        Calendar cal = Calendar.getInstance(tz1, locale1);
-        cal.set(2016, 7, 12);
         int meetingId = cm.addFutureMeeting(cmContacts, cal);
-        //retrievedFutureMeeting = cm.getFutureMeeting(meetingId);
-        assertTrue(true);
+        FutureMeeting retFut = cm.getFutureMeeting(meetingId);
+        assertTrue(meetingId == retFut.getId());
+        assertEquals(cal, retFut.getDate());
+        assertEquals(cmContacts, retFut.getContacts());
     }
-    
-
-    
 }
