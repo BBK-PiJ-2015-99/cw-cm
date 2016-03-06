@@ -1,5 +1,5 @@
-
-
+import java.util.Locale;
+import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.io.BufferedReader;
@@ -9,6 +9,7 @@ import java.io.PrintWriter;
 import java.lang.StringBuilder;
 import java.lang.IllegalArgumentException;
 import java.io.IOException;
+import java.lang.NullPointerException;
 import java.util.Calendar;
 import java.util.List;
 import java.util.LinkedList;
@@ -49,11 +50,20 @@ public class  ContactManagerImpl implements ContactManager {
     * @throws NullPointerException if the meeting or the date are null
     */
     public int addFutureMeeting(Set<Contact> contacts, Calendar date){
-        int newHighestFutureMeetingid = highestFutureMeetingId + 1;
-        /* if (date == null)
-            throw new IllegalArgumentException("Date supplied is null");
-        */
-        return 34;    
+        int newHighestFutureMeetingId = highestFutureMeetingId + 1;
+        if (date == null)
+            throw new NullPointerException("Date supplied is null");
+        Locale locale1 = Locale.UK;
+        TimeZone tz1 = TimeZone.getTimeZone("GMT");
+        Calendar cal = Calendar.getInstance(tz1, locale1);
+        if(cal.compareTo(date) > 0)
+            throw new IllegalArgumentException("Future meeting date is in the past.");
+        if(!this.contacts.containsAll(contacts))
+            throw new IllegalArgumentException("Unknown contact used in FutureMeeting");
+        FutureMeeting fm = new FutureMeetingImpl(newHighestFutureMeetingId, date, contacts);
+        futureMeetings.add(fm);
+        highestFutureMeetingId = newHighestFutureMeetingId;
+        return newHighestFutureMeetingId;    
     }
     /**
     * Returns the PAST meeting with the requested ID, or null if it there is none.

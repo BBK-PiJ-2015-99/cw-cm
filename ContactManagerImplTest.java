@@ -115,8 +115,6 @@ public class ContactManagerImplTest {
 
     @Test(expected=IllegalArgumentException.class)
     public void addFutureMeetingPastDate(){
-        //Locale locale1 = Locale.UK;
-        //TimeZone tz1 = TimeZone.getTimeZone("GMT");
         Calendar cal = Calendar.getInstance();
         cal.set(2015, 7, 12);
         Set<Contact> cmContacts = new LinkedHashSet();
