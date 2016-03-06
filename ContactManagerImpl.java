@@ -277,7 +277,7 @@ public class  ContactManagerImpl implements ContactManager {
                     int entryId = Integer.parseInt(matcher.group(1));
                     if (entryId > highestContactIdInFile)
                         highestContactIdInFile = entryId;
-                    Contact newContact = new ContactImpl( Integer.parseInt(matcher.group(1)), matcher.group(2), matcher.group(3));
+                    Contact newContact = new ContactImpl( entryId, matcher.group(2), matcher.group(3));
                     contacts.add(newContact);
                     System.out.println("HIhgest id seen so far:" + highestContactIdInFile);
                     System.out.println("Size of contacts:" + contacts.size());

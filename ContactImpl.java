@@ -49,8 +49,6 @@ public class ContactImpl implements Contact {
             return false;
         if(!(this.getName() == other.getName()))
             return false;
-        if( (this.getNotes() == null) ? (other.getNotes() != null) : !this.getNotes().equals(other.getNotes()))
-            return false;  
         return true;
     }
 
@@ -58,7 +56,7 @@ public class ContactImpl implements Contact {
     public int hashCode(){
     
         int hash = 3;
-        hash = 53 * hash + this.getId() + this.getName().hashCode() + (this.getNotes() != null ? this.getNotes().hashCode() : 0); 
+        hash = 53 * hash + this.getId() + this.getName().hashCode() ; 
         return hash;
     }
 

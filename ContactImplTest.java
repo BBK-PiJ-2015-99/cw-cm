@@ -74,12 +74,6 @@ public class ContactImplTest {
         assertThat(c1, not(c2));
     }
     @Test
-    public void objDiffComment(){
-        Contact c1 = new ContactImpl(4,"Spielberg", "A director");
-        Contact c2 = new ContactImpl(4,"Spielberg", "A birector");
-        assertThat(c1, not(c2));
-    }
-    @Test
     public void sameObjectsEqual(){
         Contact c1 = new ContactImpl(4,"Spielberg", "A director");
         Contact c2 = new ContactImpl(4,"Spielberg", "A director");
@@ -101,7 +95,6 @@ public class ContactImplTest {
     
         s2.add(c3);
         s2.add(c4);
-
         assertEquals(s1, s2);
     }
     @Test
