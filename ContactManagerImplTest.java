@@ -15,7 +15,14 @@ import java.util.TimeZone;
 
 public class ContactManagerImplTest {
 
-
+    private  int[] addJohn3(){
+        int[] ids = new int[3];
+        ids[0] = cm.addNewContact("John", "Engineer");
+        ids[1] = cm.addNewContact("John", "Engineer");
+        ids[2] = cm.addNewContact("John", "Engineer");
+        return ids;
+    }
+    
     private ContactManager cm;
 
     @Before 
@@ -73,12 +80,10 @@ public class ContactManagerImplTest {
 
     @Test 
     public void addMultipleContactsSameName(){
-        int id = cm.addNewContact("John", "Engineer");
-        int id2 = cm.addNewContact("John", "Engineer");
-        int id3 = cm.addNewContact("John", "Engineer");
+        int[] ids = addJohn3();
         Set<Contact> contactsByName = cm.getContacts("John");
         //TODO: add all relevant ids
-        Set<Contact> contactsById = cm.getContacts(id, id2, id3);
+        Set<Contact> contactsById = cm.getContacts(ids[0], ids[1], ids[2]);
         assertTrue(!contactsByName.isEmpty());
         assertTrue(!contactsById.isEmpty());
         assertThat(contactsByName, is(contactsById));
@@ -120,6 +125,15 @@ public class ContactManagerImplTest {
         Set<Contact> cmContacts = new LinkedHashSet();
         cm.addFutureMeeting(cmContacts,cal );
     }
+
+    @Test(expected=IllegalArgumentException.class)
+    public void getFutureMeetingWhichIsInThePast(){
+        //Add past meeting, which we will search for using getFutureMeeting. This test relies on the curret dummy method creating a meeting with id 444
+        Set<Contact> cntcts = new LinkedHashSet();
+        Calendar cal = Calendar.getInstance();
+        cm.addNewPastMeeting(cntcts, cal, "THIS THIS THIS");
+        cm.getFutureMeeting(666);
+    }
  
     @Test(expected=IllegalArgumentException.class)
     public void addFutureMeetingNonExistantContact(){
@@ -132,10 +146,11 @@ public class ContactManagerImplTest {
         Locale locale1 = Locale.UK;
         TimeZone tz1 = TimeZone.getTimeZone("GMT");
         Calendar cal = Calendar.getInstance(tz1, locale1);
-
         cal.set(2016, 7, 12);
         cm.addFutureMeeting(nonExistantContact,cal );
     }
+
+
 
     @Test
     public void createMeeting(){

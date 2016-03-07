@@ -22,15 +22,19 @@ import java.util.Calendar;
 public class  ContactManagerImpl implements ContactManager {
    
     private List<FutureMeeting> futureMeetings; 
+    private List<PastMeeting> pastMeetings; 
     private List<Contact> contacts;
     private int highestContactId;
     private int highestFutureMeetingId;
+    private int highestPastMeetingId;
+
 
     public ContactManagerImpl(){
         highestContactId = 0;
         highestFutureMeetingId = 0;
         contacts = new LinkedList();
         futureMeetings = new LinkedList();
+        pastMeetings = new LinkedList();
         //TODO: add contacts from file. Get highest ID
         loadContacts();
         //What happens if there is no file to load? Check for in loaContacts
@@ -91,12 +95,19 @@ public class  ContactManagerImpl implements ContactManager {
     */
     public FutureMeeting getFutureMeeting(int id){
         // TODO -- Dummy code 
-        Set<Contact> dummySet = new LinkedHashSet(); 
-        Calendar cal = Calendar.getInstance();
-        System.out.println("i-------> Running here!");
-        FutureMeeting dummyMeeting = new FutureMeetingImpl(3, cal, dummySet );
-        System.out.println("i-------> After casting!");
-        return dummyMeeting;
+        System.out.println("Number of past meetings:" + pastMeetings.size());
+        for (PastMeeting pm : pastMeetings ){
+            System.out.println("Checking this past  meeting:" + pm.getId());
+            if (pm.getId() == id){
+                throw new IllegalArgumentException("The future meeting requested is in the past");
+            }
+        }
+        FutureMeeting fm = null;
+        for (FutureMeeting tmpFm : futureMeetings){
+            if (tmpFm.getId() == id)
+                fm = tmpFm;
+        }
+        return fm;
     }
     /**
     * Returns the meeting with the requested ID, or null if it there is none.
@@ -172,7 +183,11 @@ public class  ContactManagerImpl implements ContactManager {
     * @throws NullPointerException if any of the arguments is null
     */
     public void addNewPastMeeting(Set<Contact> contacts, Calendar date, String text){
-    
+        //Dummy implementation
+        int newHighestPastMeetingId = highestPastMeetingId +1;
+        PastMeeting pm = new PastMeetingImpl(666,date, contacts, text ); 
+        pastMeetings.add(pm);
+        highestPastMeetingId = newHighestPastMeetingId;
     }
     /**
     * Add notes to a meeting.
