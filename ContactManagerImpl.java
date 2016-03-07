@@ -168,6 +168,8 @@ public class  ContactManagerImpl implements ContactManager {
     * @throws NullPointerException if the contact is null
     */
     public List<PastMeeting> getPastMeetingListFor(Contact contact){
+        if(contact == null)
+            throw new NullPointerException("Contact to search PastMeetings on is null");
         List<PastMeeting> dummySet = new LinkedList(); 
         return dummySet;
     }
