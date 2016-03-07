@@ -137,9 +137,6 @@ public class ContactManagerImplTest {
  
     @Test(expected=IllegalArgumentException.class)
     public void addFutureMeetingNonExistantContact(){
-        int id = cm.addNewContact("Joihn", "Engineer");
-        int id2 = cm.addNewContact("John", "Engineer");
-        int id3 = cm.addNewContact("John", "Engineer");
         Set<Contact> nonExistantContact  = new LinkedHashSet();
         Contact newContact = new ContactImpl(444, "Llewyn", "The protagonist of a movie I once watched");
         nonExistantContact.add(newContact);
@@ -150,10 +147,8 @@ public class ContactManagerImplTest {
         cm.addFutureMeeting(nonExistantContact,cal );
     }
 
-
-
     @Test
-    public void createMeeting(){
+    public void createRetrieveFututreMeeting(){
         Locale locale1 = Locale.UK;
         TimeZone tz1 = TimeZone.getTimeZone("GMT");
         Calendar cal = Calendar.getInstance(tz1, locale1);
