@@ -164,23 +164,6 @@ public class ContactManagerImplTest {
         assertEquals(cmContacts, retFut.getContacts());
     }
 
-    @Test(expected=NullPointerException.class)
-    public void createPastMeetingNullContacts(){
-        Calendar cal = Calendar.getInstance();
-        cm.addNewPastMeeting(null, cal, "test");
-    }
-    @Test(expected=NullPointerException.class)
-    public void createPastMeetingNullCal(){
-        Set<Contact> cntcts = new LinkedHashSet();
-        cm.addNewPastMeeting(cntcts, null, "test");
-    }
-    //@Test(expected=NullPointerException.class)
-    @Test
-    public void createPastMeetingNullTxt(){
-        Set<Contact> cntcts = new LinkedHashSet();
-        Calendar cal = Calendar.getInstance();
-        cm.addNewPastMeeting(cntcts, cal, null);
-    }
     @Test(expected=IllegalArgumentException.class)
     public void createPastMeetingEmptyContacts(){
         Set<Contact> cntcts = new LinkedHashSet();
