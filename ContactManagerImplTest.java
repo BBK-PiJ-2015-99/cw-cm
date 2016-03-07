@@ -163,4 +163,37 @@ public class ContactManagerImplTest {
         assertEquals(cal, retFut.getDate());
         assertEquals(cmContacts, retFut.getContacts());
     }
+
+    @Test(expected=NullPointerException.class)
+    public void createPastMeetingNullContacts(){
+        Calendar cal = Calendar.getInstance();
+        cm.addNewPastMeeting(null, cal, "test");
+    }
+    @Test(expected=NullPointerException.class)
+    public void createPastMeetingNullCal(){
+        Set<Contact> cntcts = new LinkedHashSet();
+        cm.addNewPastMeeting(cntcts, null, "test");
+    }
+    //@Test(expected=NullPointerException.class)
+    @Test
+    public void createPastMeetingNullTxt(){
+        Set<Contact> cntcts = new LinkedHashSet();
+        Calendar cal = Calendar.getInstance();
+        cm.addNewPastMeeting(cntcts, cal, null);
+    }
+    @Test(expected=IllegalArgumentException.class)
+    public void createPastMeetingEmptyContacts(){
+        Set<Contact> cntcts = new LinkedHashSet();
+        Calendar cal = Calendar.getInstance();
+        cm.addNewPastMeeting(cntcts, cal,"TEST");
+    }
+    @Test(expected=IllegalArgumentException.class)
+    public void createPastMeetingContactDoesntExist(){
+        Calendar cal = Calendar.getInstance();
+        int[] ids = addJohn3();
+        Set<Contact> cntcts = cm.getContacts("John");
+        Contact c = new ContactImpl(9999, "Maria", "Foge, comingo Maria.");
+        cntcts.add(c);
+        cm.addNewPastMeeting(cntcts, cal,"TEST");
+    }
 }
