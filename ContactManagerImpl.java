@@ -188,7 +188,7 @@ public class  ContactManagerImpl implements ContactManager {
             throw new IllegalArgumentException("Contacts size is null or unknown contact in supplied");
         
         int newHighestPastMeetingId = highestPastMeetingId +1;
-        PastMeeting pm = new PastMeetingImpl(newHighestPastMeeting,date, contacts, text ); 
+        PastMeeting pm = new PastMeetingImpl(newHighestPastMeetingId,date, contacts, text ); 
         pastMeetings.add(pm);
         highestPastMeetingId = newHighestPastMeetingId;
     }

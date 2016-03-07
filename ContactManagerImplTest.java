@@ -1,5 +1,5 @@
 
-
+import java.util.List;
 import java.util.Set;
 import java.util.HashSet;
 import static org.hamcrest.CoreMatchers.*;
@@ -179,4 +179,36 @@ public class ContactManagerImplTest {
         cntcts.add(c);
         cm.addNewPastMeeting(cntcts, cal,"TEST");
     }
+    @Test
+    public void createRetrievePastMeeting(){
+        Calendar cal = Calendar.getInstance();
+        int[] ids = addJohn3();
+        Set<Contact> cmContacts = cm.getContacts(ids[0], ids[1], ids[2]);
+        cm.addNewPastMeeting(cmContacts, cal, "NOTESo");
+
+        Set<Contact> allToGet = cm.getContacts(ids[0]);
+        Contact toGet = allToGet.iterator().next();
+        List<PastMeeting> retPast = cm.getPastMeetingListFor(toGet);
+        assertTrue(retPast.size() ==1);
+        PastMeeting retPastItem = retPast.iterator().next();
+        assertEquals(cal, retPastItem.getDate());
+        assertEquals(cmContacts, retPastItem.getContacts());
+        assertEquals("NOTESo", retPastItem.getNotes());
+    }
+
+
+    @Test(expected=NullPointerException.class)
+    public void getPastMtgForContactNull(){
+        List<PastMeeting> pml = cm.getPastMeetingListFor(null);
+    }
+    
+    
+    @Test(expected=IllegalArgumentException.class)
+    public void getPastMtgForContactDoesntExist(){
+        int[] ids = addJohn3();
+        Contact breakIt = new ContactImpl(4444, "Stuart", "Adventurer");
+        List<PastMeeting> pml = cm.getPastMeetingListFor(breakIt);
+    }
+
 }
+
