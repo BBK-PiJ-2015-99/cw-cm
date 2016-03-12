@@ -1,3 +1,6 @@
+import java.text.SimpleDateFormat;
+import java.util.Comparator;
+import java.util.Collections;
 import java.util.Locale;
 import java.util.TimeZone;
 import java.util.regex.Matcher;
@@ -170,10 +173,30 @@ public class  ContactManagerImpl implements ContactManager {
     public List<PastMeeting> getPastMeetingListFor(Contact contact){
         if(contact == null)
             throw new NullPointerException("Contact to search PastMeetings on is null");
-        List<PastMeeting> dummySet = new LinkedList(); 
-        return dummySet;
+        if(!contacts.contains(contact))
+            throw new IllegalArgumentException("Unknown contact to search for in PastMeetings");
+        Set<PastMeeting> collectSet = new LinkedHashSet(); 
+        for (PastMeeting pm : pastMeetings ){
+            if(pm.getContacts().contains(contact))
+                collectSet.add(pm);
+        }
+        SimpleDateFormat df = new SimpleDateFormat();
+        df.applyPattern("dd/MM/yyyy");
+/*
+        for(PastMeeting pm : collectSet){
+            System.out.println("Sorted Return List-->" + pm.getNotes() + "  ---  " + df.format(pm.getDate().getTime()) );
+        }*/
+        List<PastMeeting> pastMeetingSortedReturnList = new LinkedList<PastMeeting>(collectSet); 
+        Collections.sort( pastMeetingSortedReturnList,  new Comparator<PastMeeting>(){
+                @Override
+                public int compare(PastMeeting pm1, PastMeeting pm2){
+                    return (int) pm2.getDate().compareTo(pm1.getDate());
+                }
+            });
+        return pastMeetingSortedReturnList;
     }
-    /**
+  
+  /**
     * Create a new record for a meeting that took place in the past.
     *
     * @param contacts a list of participants

@@ -1,4 +1,4 @@
-
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Set;
 import java.util.HashSet;
@@ -180,28 +180,57 @@ public class ContactManagerImplTest {
         cm.addNewPastMeeting(cntcts, cal,"TEST");
     }
     @Test
-    public void createRetrievePastMeeting(){
-        Calendar cal = Calendar.getInstance();
+    public void createRetrieveSortedPastMeetings(){
+        Calendar calFirst = Calendar.getInstance();
+        Calendar calMiddle = Calendar.getInstance();
+        Calendar calMostRecent = Calendar.getInstance();
         int[] ids = addJohn3();
-        Set<Contact> cmContacts = cm.getContacts(ids[0], ids[1], ids[2]);
-        cm.addNewPastMeeting(cmContacts, cal, "NOTESo");
+        SimpleDateFormat df = new SimpleDateFormat();
+        df.applyPattern("dd/MM/yyyy");
 
+        Set<Contact> cmContacts = cm.getContacts(ids[0], ids[1], ids[2]);
+        calFirst.clear();
+        calMiddle.clear();
+        calMostRecent.clear();
+        calFirst.set(2015,1,2);
+        calMiddle.set(2015,6,7);
+        calMostRecent.set(2015,10,1);
+        cm.addNewPastMeeting(cmContacts, calFirst, "NOTES-First");
+        cm.addNewPastMeeting(cmContacts, calMiddle, "NOTES-Middle");
+        cm.addNewPastMeeting(cmContacts, calMostRecent, "NOTES-Recent");
+        // create 3 past meetings - with different past dates ensure meetings are returned in correct orders
         Set<Contact> allToGet = cm.getContacts(ids[0]);
         Contact toGet = allToGet.iterator().next();
         List<PastMeeting> retPast = cm.getPastMeetingListFor(toGet);
-        assertTrue(retPast.size() ==1);
-        PastMeeting retPastItem = retPast.iterator().next();
-        assertEquals(cal, retPastItem.getDate());
-        assertEquals(cmContacts, retPastItem.getContacts());
-        assertEquals("NOTESo", retPastItem.getNotes());
+        System.out.println("Number of meeting returned:" + retPast.size());
+        PastMeeting retPastItemMostRecent = retPast.get(0);
+        //retPast.iterator().remove();
+        PastMeeting retPastItemMiddle = retPast.get(1);
+        PastMeeting retPastItemFirst = retPast.get(2);
+        System.out.println("Returning the same meeting always:" + (retPastItemMiddle == retPastItemFirst));
+        System.out.println("Returning the same meeting always:" + (retPastItemMiddle == retPastItemMostRecent));
+        System.out.println("Number of meeting available:" + retPast.size());
+        assertTrue(retPast.size() ==3);
+        for(PastMeeting pm : retPast){
+            System.out.println("Sorted Return List-DOES IT WORK-->" + pm.getNotes() + "  ---  " + df.format(pm.getDate().getTime()) );
+        }
+        System.out.println("Most recent date:" +  df.format(retPastItemMostRecent.getDate().getTime()) );
+        System.out.println("Recent  notes:" +  retPastItemMostRecent.getNotes()) ;
+        System.out.println("Middle  notes:" +  retPastItemMiddle.getNotes()) ;
+        System.out.println("Middle  date:" +  df.format(retPastItemMiddle.getDate().getTime()) );
+        System.out.println("First date:" +  df.format(retPastItemFirst.getDate().getTime()) );
+        System.out.println(df.format(calMostRecent.getTime()) + "----" + df.format(retPastItemMostRecent.getDate().getTime()) );
+        assertEquals(calMostRecent, retPastItemMostRecent.getDate());
+        assertEquals(cmContacts, retPastItemMostRecent.getContacts());
+        assertEquals("NOTES-Recent", retPastItemMostRecent.getNotes());
+        assertEquals(calMiddle, retPastItemMiddle.getDate());
+        assertEquals(calFirst, retPastItemFirst.getDate());
     }
-
 
     @Test(expected=NullPointerException.class)
     public void getPastMtgForContactNull(){
         List<PastMeeting> pml = cm.getPastMeetingListFor(null);
     }
-    
     
     @Test(expected=IllegalArgumentException.class)
     public void getPastMtgForContactDoesntExist(){
