@@ -139,8 +139,9 @@ public class  ContactManagerImpl implements ContactManager {
     * @throws NullPointerException if the contact is null
     */
     public List<Meeting> getFutureMeetingList(Contact contact){
-        List<Meeting> dummySet = new LinkedList(); 
-        return dummySet;
+        List<Meeting> meetingSortedReturnList = getMeetingListFor(contact, true);
+        List<PastMeeting> pastMeetingSortedReturnList = (List) meetingSortedReturnList;
+        return pastMeetingSortedReturnList;
     }
     /**
     * Returns the list of meetings that are scheduled for, or that took
@@ -215,10 +216,6 @@ public class  ContactManagerImpl implements ContactManager {
     public List<PastMeeting> getPastMeetingListFor(Contact contact){
         List<Meeting> meetingSortedReturnList = getMeetingListFor(contact, true);
         List<PastMeeting> pastMeetingSortedReturnList = (List) meetingSortedReturnList;
-            System.out.println(" ---- GETTING A LIST OF PAST MEETINGS -------");
-        for (PastMeeting pm : pastMeetingSortedReturnList){
-            System.out.println("PAST MEETING RETURNED:"+pm );
-        }
         return pastMeetingSortedReturnList;
     }
   
