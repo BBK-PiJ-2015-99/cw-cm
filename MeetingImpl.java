@@ -1,3 +1,4 @@
+import java.text.SimpleDateFormat;
 import java.util.GregorianCalendar;
 import java.util.Calendar;
 import java.util.Set;
@@ -51,4 +52,12 @@ public abstract class MeetingImpl implements Meeting {
     public Set<Contact> getContacts(){
         return this.contacts;
     }
+    @Override
+     public String toString(){
+        SimpleDateFormat df = new SimpleDateFormat();
+        df.applyPattern("dd/MM/yyyy");
+        return "\""+ this.getId() +  "\""+ df.format(this.getDate().getTime()) + "\""+this.getContacts().size()  +"\"";
+
+    }
+
 }

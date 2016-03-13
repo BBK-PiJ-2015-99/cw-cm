@@ -22,7 +22,22 @@ public class ContactManagerImplTest {
         ids[2] = cm.addNewContact("John", "Engineer");
         return ids;
     }
-    
+   
+    private void addMeetingsJohn3(Calendar calFirst, Calendar calMiddle, Calendar calMostRecent){
+        int[] ids = addJohn3();
+        SimpleDateFormat df = new SimpleDateFormat();
+        df.applyPattern("dd/MM/yyyy");
+        Set<Contact> cmContacts = cm.getContacts(ids[0], ids[1], ids[2]);
+        /*calFirst.clear();
+        calMiddle.clear();
+        calMostRecent.clear();*/
+        Set<Contact> allToGet = cm.getContacts(ids[0]);
+        Contact toGet = allToGet.iterator().next();
+        cm.addNewPastMeeting(cmContacts, calFirst, "NOTES-First");
+        cm.addNewPastMeeting(cmContacts, calMiddle, "NOTES-Middle");
+        cm.addNewPastMeeting(cmContacts, calMostRecent, "NOTES-Recent");
+    }
+ 
     private ContactManager cm;
 
     @Before 
@@ -184,30 +199,53 @@ public class ContactManagerImplTest {
         Calendar calFirst = Calendar.getInstance();
         Calendar calMiddle = Calendar.getInstance();
         Calendar calMostRecent = Calendar.getInstance();
-        int[] ids = addJohn3();
-        SimpleDateFormat df = new SimpleDateFormat();
-        df.applyPattern("dd/MM/yyyy");
-
-        Set<Contact> cmContacts = cm.getContacts(ids[0], ids[1], ids[2]);
-        calFirst.clear();
-        calMiddle.clear();
-        calMostRecent.clear();
         calFirst.set(2015,1,2);
         calMiddle.set(2015,6,7);
         calMostRecent.set(2015,10,1);
-        // create 3 past meetings - with different past dates ensure meetings are returned in correct orders
-        Set<Contact> allToGet = cm.getContacts(ids[0]);
+        addMeetingsJohn3(calFirst, calMiddle, calMostRecent);
+        Set<Contact> allToGet = cm.getContacts("John");
         Contact toGet = allToGet.iterator().next();
         List<PastMeeting> retPast = cm.getPastMeetingListFor(toGet);
         PastMeeting retPastItemMostRecent = retPast.get(0);
         PastMeeting retPastItemMiddle = retPast.get(1);
         PastMeeting retPastItemFirst = retPast.get(2);
+        System.out.println("WHAT DID WE GET????");
+        System.out.println( retPastItemMostRecent);
+        System.out.println( retPastItemMiddle);
+        System.out.println( retPastItemFirst);
         assertTrue(retPast.size() ==3);
         assertEquals(calMostRecent, retPastItemMostRecent.getDate());
-        assertEquals(cmContacts, retPastItemMostRecent.getContacts());
+        assertEquals(allToGet, retPastItemMostRecent.getContacts());
         assertEquals("NOTES-Recent", retPastItemMostRecent.getNotes());
         assertEquals(calMiddle, retPastItemMiddle.getDate());
         assertEquals(calFirst, retPastItemFirst.getDate());
+    }
+
+    @Test
+    public void createRetrieveSortedFutureMeetingsFor(){
+        Calendar calSoonest = Calendar.getInstance();
+        Calendar calMiddle = Calendar.getInstance();
+        Calendar calLast = Calendar.getInstance();
+        calSoonest.set(2017,1,2);
+        calMiddle.set(2017,6,7);
+        calLast.set(2017,10,1);
+        addMeetingsJohn3(calSoonest, calMiddle, calLast);
+        Set<Contact> allToGet = cm.getContacts("John");
+        Contact toGet = allToGet.iterator().next();
+        List<PastMeeting> retPast = cm.getPastMeetingListFor(toGet);
+        PastMeeting retPastItemSoonest = retPast.get(0);
+        PastMeeting retPastItemMiddle = retPast.get(1);
+        PastMeeting retPastItemLast = retPast.get(2);
+        System.out.println("WHAT DID WE GET????");
+        System.out.println( retPastItemLast);
+        System.out.println( retPastItemMiddle);
+        System.out.println( retPastItemSoonest);
+        assertTrue(retPast.size() ==3);
+        assertEquals(calSoonest, retPastItemSoonest.getDate());
+        assertEquals(allToGet, retPastItemSoonest.getContacts());
+        assertEquals("NOTES-Recent", retPastItemSoonest.getNotes());
+        assertEquals(calMiddle, retPastItemMiddle.getDate());
+        assertEquals(calLast, retPastItemLast.getDate());
     }
 
     @Test(expected=NullPointerException.class)
@@ -222,5 +260,16 @@ public class ContactManagerImplTest {
         List<PastMeeting> pml = cm.getPastMeetingListFor(breakIt);
     }
 
+    @Test(expected=NullPointerException.class)
+    public void getFutureMtgForContactNull(){
+        List<Meeting> pml = cm.getFutureMeetingList(null);
+    }
+    
+    @Test(expected=IllegalArgumentException.class)
+    public void getFutureMtgForContactDoesntExist(){
+        int[] ids = addJohn3();
+        Contact breakIt = new ContactImpl(4444, "Stuart", "Adventurer");
+        List<Meeting> pml = cm.getFutureMeetingList(breakIt);
+    }
 }
 

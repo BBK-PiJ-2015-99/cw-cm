@@ -1,3 +1,4 @@
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Set;
 /**
@@ -8,7 +9,7 @@ import java.util.Set;
 public class PastMeetingImpl extends MeetingImpl implements PastMeeting {
     
     private String notes = "";
-
+   
     public PastMeetingImpl(int id, Calendar date, Set<Contact> contacts, String notes){
         super(id, date, contacts);
         if (notes == null)
@@ -25,4 +26,6 @@ public class PastMeetingImpl extends MeetingImpl implements PastMeeting {
     public String getNotes(){
         return this.notes;
     }
+
+
 }

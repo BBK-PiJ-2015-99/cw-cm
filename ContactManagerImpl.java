@@ -168,28 +168,35 @@ public class  ContactManagerImpl implements ContactManager {
     * @throws IllegalArgumentException if the contact does not exist
     * @throws NullPointerException if the contact is null
     */
-    private List<Meeting> getMeetingListFor(Contact contact, boolean pastMeetings){
+    private List<Meeting> getMeetingListFor(Contact contact, boolean getPastMeetings){
         if(contact == null)
             throw new NullPointerException("Contact to search PastMeetings on is null");
         if(!contacts.contains(contact))
             throw new IllegalArgumentException("Unknown contact to search for in PastMeetings");
-        if(pastMeetings){
-            Set<FutureMeeting> toSearch = pastMeetings;
+        
+        List<? extends Meeting> toSearch;
+        if(getPastMeetings){
+            toSearch = pastMeetings;
         } else {
-            Set<FutureMeeting> toSearch = futureMeetings;
+            toSearch = futureMeetings;
         }
-        Set<PastMeeting> collectSet = new LinkedHashSet(); 
+        Set<Meeting> collectSet = new LinkedHashSet(); 
         for (Meeting m : toSearch ){
             if(m.getContacts().contains(contact))
                 collectSet.add(m);
         }
-        List<Meeting> meetingSortedReturnList = new LinkedList<PastMeeting>(collectSet); 
-        Collections.sort( pastMeetingSortedReturnList,  new Comparator<Meeting>(){
+        List<Meeting> meetingSortedReturnList = new LinkedList(collectSet); 
+        Collections.sort( meetingSortedReturnList,  new Comparator<Meeting>(){
                 @Override
-                public int compare(PastMeeting pm1, PastMeeting pm2){
-                    return (int) pm2.getDate().compareTo(pm1.getDate());
+                public int compare(Meeting m1, Meeting m2){
+                    return (int) m2.getDate().compareTo(m1.getDate());
                 }
             });
+            System.out.println(" ---- GETTING A LIST OF MEETINGS at GENERIC -------" + toSearch.size());
+            System.out.println(" -" + toSearch.size() +"-"+pastMeetings.size() +"--");
+        for (Meeting m : collectSet){
+            System.out.println("PAST MEETING RETURNED:"+m );
+        }
         return meetingSortedReturnList;
     }
 
@@ -206,22 +213,12 @@ public class  ContactManagerImpl implements ContactManager {
     * @throws NullPointerException if the contact is null
     */
     public List<PastMeeting> getPastMeetingListFor(Contact contact){
-        if(contact == null)
-            throw new NullPointerException("Contact to search PastMeetings on is null");
-        if(!contacts.contains(contact))
-            throw new IllegalArgumentException("Unknown contact to search for in PastMeetings");
-        Set<PastMeeting> collectSet = new LinkedHashSet(); 
-        for (PastMeeting pm : pastMeetings ){
-            if(pm.getContacts().contains(contact))
-                collectSet.add(pm);
+        List<Meeting> meetingSortedReturnList = getMeetingListFor(contact, true);
+        List<PastMeeting> pastMeetingSortedReturnList = (List) meetingSortedReturnList;
+            System.out.println(" ---- GETTING A LIST OF PAST MEETINGS -------");
+        for (PastMeeting pm : pastMeetingSortedReturnList){
+            System.out.println("PAST MEETING RETURNED:"+pm );
         }
-        List<PastMeeting> pastMeetingSortedReturnList = new LinkedList<PastMeeting>(collectSet); 
-        Collections.sort( pastMeetingSortedReturnList,  new Comparator<PastMeeting>(){
-                @Override
-                public int compare(PastMeeting pm1, PastMeeting pm2){
-                    return (int) pm2.getDate().compareTo(pm1.getDate());
-                }
-            });
         return pastMeetingSortedReturnList;
     }
   
