@@ -158,6 +158,41 @@ public class  ContactManagerImpl implements ContactManager {
         List<Meeting> dummySet = new LinkedList(); 
         return dummySet;
     }
+
+    /**
+    *Generic method to search meetings by Contacts
+    *
+    * @param contact one of the users contacts
+    * @param true to search past meetings, false to search futureMeetings 
+    * @return the list of future meeting(s) scheduled with this contact (maybe empty).
+    * @throws IllegalArgumentException if the contact does not exist
+    * @throws NullPointerException if the contact is null
+    */
+    private List<Meeting> getMeetingListFor(Contact contact, boolean pastMeetings){
+        if(contact == null)
+            throw new NullPointerException("Contact to search PastMeetings on is null");
+        if(!contacts.contains(contact))
+            throw new IllegalArgumentException("Unknown contact to search for in PastMeetings");
+        if(pastMeetings){
+            Set<FutureMeeting> toSearch = pastMeetings;
+        } else {
+            Set<FutureMeeting> toSearch = futureMeetings;
+        }
+        Set<PastMeeting> collectSet = new LinkedHashSet(); 
+        for (Meeting m : toSearch ){
+            if(m.getContacts().contains(contact))
+                collectSet.add(m);
+        }
+        List<Meeting> meetingSortedReturnList = new LinkedList<PastMeeting>(collectSet); 
+        Collections.sort( pastMeetingSortedReturnList,  new Comparator<Meeting>(){
+                @Override
+                public int compare(PastMeeting pm1, PastMeeting pm2){
+                    return (int) pm2.getDate().compareTo(pm1.getDate());
+                }
+            });
+        return meetingSortedReturnList;
+    }
+
     /**
     * Returns the list of past meetings in which this contact has participated.
     *
@@ -180,12 +215,6 @@ public class  ContactManagerImpl implements ContactManager {
             if(pm.getContacts().contains(contact))
                 collectSet.add(pm);
         }
-        SimpleDateFormat df = new SimpleDateFormat();
-        df.applyPattern("dd/MM/yyyy");
-/*
-        for(PastMeeting pm : collectSet){
-            System.out.println("Sorted Return List-->" + pm.getNotes() + "  ---  " + df.format(pm.getDate().getTime()) );
-        }*/
         List<PastMeeting> pastMeetingSortedReturnList = new LinkedList<PastMeeting>(collectSet); 
         Collections.sort( pastMeetingSortedReturnList,  new Comparator<PastMeeting>(){
                 @Override
