@@ -98,7 +98,6 @@ public class  ContactManagerImpl implements ContactManager {
     */
     public FutureMeeting getFutureMeeting(int id){
         // TODO -- Dummy code 
-        System.out.println("Number of past meetings:" + pastMeetings.size());
         for (PastMeeting pm : pastMeetings ){
             System.out.println("Checking this past  meeting:" + pm.getId());
             if (pm.getId() == id){
@@ -139,9 +138,16 @@ public class  ContactManagerImpl implements ContactManager {
     * @throws NullPointerException if the contact is null
     */
     public List<Meeting> getFutureMeetingList(Contact contact){
-        List<Meeting> meetingSortedReturnList = getMeetingListFor(contact, true);
-        List<PastMeeting> pastMeetingSortedReturnList = (List) meetingSortedReturnList;
-        return pastMeetingSortedReturnList;
+        List<Meeting> meetingSortedReturnList = getMeetingListFor(contact, false);
+
+
+        Collections.sort( meetingSortedReturnList,  new Comparator<Meeting>(){
+                @Override
+                public int compare(Meeting m1, Meeting m2){
+                    return (int) m1.getDate().compareTo(m2.getDate());
+                }
+        });
+        return meetingSortedReturnList;
     }
     /**
     * Returns the list of meetings that are scheduled for, or that took
@@ -193,11 +199,6 @@ public class  ContactManagerImpl implements ContactManager {
                     return (int) m2.getDate().compareTo(m1.getDate());
                 }
             });
-            System.out.println(" ---- GETTING A LIST OF MEETINGS at GENERIC -------" + toSearch.size());
-            System.out.println(" -" + toSearch.size() +"-"+pastMeetings.size() +"--");
-        for (Meeting m : collectSet){
-            System.out.println("PAST MEETING RETURNED:"+m );
-        }
         return meetingSortedReturnList;
     }
 
@@ -215,6 +216,12 @@ public class  ContactManagerImpl implements ContactManager {
     */
     public List<PastMeeting> getPastMeetingListFor(Contact contact){
         List<Meeting> meetingSortedReturnList = getMeetingListFor(contact, true);
+        Collections.sort( meetingSortedReturnList,  new Comparator<Meeting>(){
+                @Override
+                public int compare(Meeting m1, Meeting m2){
+                    return (int) m2.getDate().compareTo(m1.getDate());
+                }
+        });
         List<PastMeeting> pastMeetingSortedReturnList = (List) meetingSortedReturnList;
         return pastMeetingSortedReturnList;
     }

@@ -23,7 +23,7 @@ public class ContactManagerImplTest {
         return ids;
     }
    
-    private void addMeetingsJohn3(Calendar calFirst, Calendar calMiddle, Calendar calMostRecent){
+    private void addMeetingsJohn3(Calendar calFirst, Calendar calMiddle, Calendar calMostRecent, boolean isPastMeeting){
         int[] ids = addJohn3();
         SimpleDateFormat df = new SimpleDateFormat();
         df.applyPattern("dd/MM/yyyy");
@@ -33,9 +33,15 @@ public class ContactManagerImplTest {
         calMostRecent.clear();*/
         Set<Contact> allToGet = cm.getContacts(ids[0]);
         Contact toGet = allToGet.iterator().next();
-        cm.addNewPastMeeting(cmContacts, calFirst, "NOTES-First");
-        cm.addNewPastMeeting(cmContacts, calMiddle, "NOTES-Middle");
-        cm.addNewPastMeeting(cmContacts, calMostRecent, "NOTES-Recent");
+        if(isPastMeeting){
+            cm.addNewPastMeeting(cmContacts, calFirst, "NOTES-First");
+            cm.addNewPastMeeting(cmContacts, calMiddle, "NOTES-Middle");
+            cm.addNewPastMeeting(cmContacts, calMostRecent, "NOTES-Recent");
+        } else {
+            cm.addFutureMeeting(cmContacts, calFirst);
+            cm.addFutureMeeting(cmContacts, calMiddle);
+            cm.addFutureMeeting(cmContacts, calMostRecent);
+        }    
     }
  
     private ContactManager cm;
@@ -202,17 +208,13 @@ public class ContactManagerImplTest {
         calFirst.set(2015,1,2);
         calMiddle.set(2015,6,7);
         calMostRecent.set(2015,10,1);
-        addMeetingsJohn3(calFirst, calMiddle, calMostRecent);
+        addMeetingsJohn3(calFirst, calMiddle, calMostRecent, true);
         Set<Contact> allToGet = cm.getContacts("John");
         Contact toGet = allToGet.iterator().next();
         List<PastMeeting> retPast = cm.getPastMeetingListFor(toGet);
         PastMeeting retPastItemMostRecent = retPast.get(0);
         PastMeeting retPastItemMiddle = retPast.get(1);
         PastMeeting retPastItemFirst = retPast.get(2);
-        System.out.println("WHAT DID WE GET????");
-        System.out.println( retPastItemMostRecent);
-        System.out.println( retPastItemMiddle);
-        System.out.println( retPastItemFirst);
         assertTrue(retPast.size() ==3);
         assertEquals(calMostRecent, retPastItemMostRecent.getDate());
         assertEquals(allToGet, retPastItemMostRecent.getContacts());
@@ -229,21 +231,16 @@ public class ContactManagerImplTest {
         calSoonest.set(2017,1,2);
         calMiddle.set(2017,6,7);
         calLast.set(2017,10,1);
-        addMeetingsJohn3(calSoonest, calMiddle, calLast);
+        addMeetingsJohn3(calSoonest, calMiddle, calLast, false);
         Set<Contact> allToGet = cm.getContacts("John");
         Contact toGet = allToGet.iterator().next();
-        List<PastMeeting> retPast = cm.getPastMeetingListFor(toGet);
-        PastMeeting retPastItemSoonest = retPast.get(0);
-        PastMeeting retPastItemMiddle = retPast.get(1);
-        PastMeeting retPastItemLast = retPast.get(2);
-        System.out.println("WHAT DID WE GET????");
-        System.out.println( retPastItemLast);
-        System.out.println( retPastItemMiddle);
-        System.out.println( retPastItemSoonest);
+        List<Meeting> retPast = cm.getFutureMeetingList(toGet);
+        Meeting retPastItemSoonest = retPast.get(0);
+        Meeting retPastItemMiddle = retPast.get(1);
+        Meeting retPastItemLast = retPast.get(2);
         assertTrue(retPast.size() ==3);
         assertEquals(calSoonest, retPastItemSoonest.getDate());
         assertEquals(allToGet, retPastItemSoonest.getContacts());
-        assertEquals("NOTES-Recent", retPastItemSoonest.getNotes());
         assertEquals(calMiddle, retPastItemMiddle.getDate());
         assertEquals(calLast, retPastItemLast.getDate());
     }

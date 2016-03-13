@@ -56,7 +56,7 @@ public abstract class MeetingImpl implements Meeting {
      public String toString(){
         SimpleDateFormat df = new SimpleDateFormat();
         df.applyPattern("dd/MM/yyyy");
-        return "\""+ this.getId() +  "\""+ df.format(this.getDate().getTime()) + "\""+this.getContacts().size()  +"\"";
+        return "\""+ this.getId() +  "\""+ df.format(this.getDate().getTime()) + "\""+this.getContacts().size()  +"\""+ "\"" ;
 
     }
 
