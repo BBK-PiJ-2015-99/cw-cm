@@ -83,10 +83,18 @@ public class  ContactManagerImpl implements ContactManager {
     * in the future
     */
     public PastMeeting getPastMeeting(int id){
-        Set<Contact> dummySet = new LinkedHashSet(); 
-        Calendar cal = Calendar.getInstance();
-        PastMeeting dummyMeeting = new PastMeetingImpl(3, cal, dummySet, "notes" );
-        return dummyMeeting;
+        for (FutureMeeting fm : futureMeetings ){
+            System.out.println("Checking this past  meeting:" + fm.getId());
+            if (fm.getId() == id){
+                throw new IllegalArgumentException("The future meeting requested is in the past");
+            }
+        }
+        PastMeeting pm = null;
+        for (PastMeeting tmpPm : pastMeetings){
+            if (tmpPm.getId() == id)
+                pm = tmpPm;
+        }
+        return pm;
     }
     /**
     * Returns the FUTURE meeting with the requested ID, or null if there is none.
@@ -384,5 +392,21 @@ public class  ContactManagerImpl implements ContactManager {
             ex.printStackTrace();
         }
     }
+
+    /**
+    *Method to inject future or past meeting for testing only
+    *
+    *
+    */
+    public void injectMeetingForTest(int id, Set<Contact> conts, Calendar meetDate, boolean isPastMeeting){
+        if(isPastMeeting){
+            PastMeeting newPastDummyMeeting = new PastMeetingImpl(id, meetDate, conts,"DUMMY"); 
+            pastMeetings.add(newPastDummyMeeting);
+        }else{
+            FutureMeeting newFutureDummyMeeting = new FutureMeetingImpl(id, meetDate, conts);
+            futureMeetings.add(newFutureDummyMeeting);
+        }   
+    }
+
 
 }

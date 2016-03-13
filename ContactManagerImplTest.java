@@ -268,5 +268,68 @@ public class ContactManagerImplTest {
         Contact breakIt = new ContactImpl(4444, "Stuart", "Adventurer");
         List<Meeting> pml = cm.getFutureMeetingList(breakIt);
     }
+
+    @Test(expected=IllegalArgumentException.class)
+    public void getFutureMeetingByPastMeetingExists(){
+        int[] ids = addJohn3();
+        Calendar calSoonest = Calendar.getInstance();
+        calSoonest.set(2017,1,2);
+        Set<Contact> cntc = cm.getContacts("John");
+        Set<Contact> cntSet = new HashSet();
+        System.out.println("Number of elements in set:" + cntSet.size());
+        cntSet.add(cntc.iterator().next());
+        ContactManagerImpl cm2 = (ContactManagerImpl) cm;
+        cm2.injectMeetingForTest(1, cntSet, calSoonest,  true);
+        FutureMeeting fm = cm.getFutureMeeting(1); 
+    }
+    
+    public void getFutureMeetingById(){
+        Calendar calSoonest = Calendar.getInstance();
+        Calendar calMiddle = Calendar.getInstance();
+        Calendar calLast = Calendar.getInstance();
+        calSoonest.set(2017,1,2);
+        calMiddle.set(2017,6,7);
+        calLast.set(2017,10,1);
+        addMeetingsJohn3(calSoonest, calMiddle ,calLast, false);
+        FutureMeeting fm = cm.getFutureMeeting(1); 
+        FutureMeeting fm2 = cm.getFutureMeeting(2); 
+        FutureMeeting fm3 = cm.getFutureMeeting(3); 
+        assertEquals(calSoonest, fm.getDate());
+        assertEquals(calMiddle, fm2.getDate());
+        assertEquals(calLast, fm3.getDate());
+    }
+
+    @Test(expected=IllegalArgumentException.class)
+    public void getPastMeetingByFutureMeetingExists(){
+        int[] ids = addJohn3();
+        Calendar calSoonest = Calendar.getInstance();
+        calSoonest.set(2017,1,2);
+        Set<Contact> cntc = cm.getContacts("John");
+        Set<Contact> cntSet = new HashSet();
+        System.out.println("Number of elements in set:" + cntSet.size());
+        cntSet.add(cntc.iterator().next());
+        ContactManagerImpl cm2 = (ContactManagerImpl) cm;
+        cm2.injectMeetingForTest(1, cntSet, calSoonest,  false);
+        PastMeeting fm = cm.getPastMeeting(1); 
+    }
+
+    @Test
+    public void getPastMeetingById(){
+        Calendar calSoonest = Calendar.getInstance();
+        Calendar calMiddle = Calendar.getInstance();
+        Calendar calLast = Calendar.getInstance();
+        calSoonest.set(2015,1,2);
+        calMiddle.set(2015,6,7);
+        calLast.set(2015,10,1);
+        addMeetingsJohn3(calSoonest, calMiddle ,calLast, true);
+        PastMeeting fm = cm.getPastMeeting(1); 
+        PastMeeting fm2 = cm.getPastMeeting(2); 
+        PastMeeting fm3 = cm.getPastMeeting(3); 
+        System.out.println("WHAT WAS RETURNED???");
+        System.out.println(fm);
+        assertEquals(calSoonest, fm.getDate());
+        assertEquals(calMiddle, fm2.getDate());
+        assertEquals(calLast, fm3.getDate());
+    }
 }
 
