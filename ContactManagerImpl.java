@@ -451,7 +451,7 @@ public class  ContactManagerImpl implements ContactManager {
         StringBuilder fileContents = new StringBuilder();
         fileContents.append("`id`,`date`,`notes`,`contacts`".replace('`','"' ) + System.lineSeparator());
         
-        for(PastMeeting pm: pastMeetings){
+        for(FutureMeeting pm: futureMeetings){
             String idList = "";
             for(Contact meetingContact : pm.getContacts()){
                 idList = idList + meetingContact.getId() + ",";
@@ -459,16 +459,15 @@ public class  ContactManagerImpl implements ContactManager {
             SimpleDateFormat sdf = new SimpleDateFormat();
             sdf.applyPattern("dd/MM/yyyy H:m:s:S");
             fileContents.append("\"" + pm.getId()  + "\",");
-            //fileContents.append("\"" + contacts.get(i).getName().replace("\n", "\\n")  + "\",");
             fileContents.append("\"" + sdf.format(pm.getDate().getTime())  + "\",");
-            fileContents.append("\"" + idList  + "\",");
-            fileContents.append("\"" + pm.getNotes().replace("\n", "\\n")  + "\"" + System.lineSeparator());
+            fileContents.append("\"" + idList  + "\"" + System.lineSeparator());
+            //fileContents.append("\"" + pm.getNotes().replace("\n", "\\n")  + "\"" + System.lineSeparator());
         } 
-        try(PrintWriter writer = new PrintWriter("PastMeetings.csv")){
+        try(PrintWriter writer = new PrintWriter("FutureMeetings.csv")){
             writer.print(fileContents);
             writer.flush();        
         } catch ( FileNotFoundException ex) {
-            System.out.println("Can't open file (PastMeetings.csv) to write contacts.");
+            System.out.println("Can't open file (FutureMeetings.csv) to write contacts.");
         }
 
     }
@@ -553,7 +552,57 @@ public class  ContactManagerImpl implements ContactManager {
             ex.printStackTrace();
         }
     }
+
+    private void loadFutureMeetings(){
+        try(BufferedReader br = new BufferedReader(new FileReader("FutureMeetings.csv"))){
+            int id;
+            String name;
+            String notes;
+            Pattern pattern = Pattern.compile("^\"(\\d+)\",\"(.*)\",\"(.*)\",\"$");
+            String line = br.readLine(); //discard first line
+            int highestIdInFile = -1;
+            while((line = br.readLine()) != null) {
+                Matcher matcher = pattern.matcher(line);
+                if(matcher.matches()){
+                    System.out.println("------------------");
+                    int entryId = Integer.parseInt(matcher.group(1));
+                    System.out.println("entryId" + entryId);
+                    //load date
+                    Calendar calendarFile = Calendar.getInstance();
+                    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy H:m:s:S");
+                    try {
+                        calendarFile.setTime(sdf.parse(matcher.group(2)));
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                    //load contacts
+                    System.out.println("-----loading at 50%---------");
+                    List<String> contactList = Arrays.asList(matcher.group(3).split(","));
+                    Set<Contact> meetContacts = new LinkedHashSet();
+                    for (String s : contactList){
+                        Set<Contact> c = getContacts(Integer.parseInt(s));
+                        meetContacts.addAll(c);
+                    }
+                    FutureMeeting newPastMeeting  = new FutureMeetingImpl( entryId, calendarFile, meetContacts);
+                    futureMeetings.add(newFutureMeeting);
+                    System.out.println("-----loading at 100%------RESO---");
+                    System.out.println(futurePastMeeting);
+                } else {
+                    System.out.println("Could not load line:" + line);
+                }
+            }
+            if(highestMeetingId == 0){
+                highestMeetingId = highestIdInFile;
+            }else if (highestMeetingId < highestIdInFile){
+                highestMeetingId = highestIdInFile;
+            }
+        } catch (FileNotFoundException ex) {
+            //do nothing -- there is no file yet to read. 
+        } catch  (IOException ex) {
+            ex.printStackTrace();
+        }
     /**
+dd
     *Method to inject future or past meeting for testing only
     *
     *
