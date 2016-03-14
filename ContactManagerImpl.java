@@ -44,6 +44,7 @@ public class  ContactManagerImpl implements ContactManager {
         //TODO: add contacts from file. Get highest ID
         loadContacts();
         loadPastMeetings();
+        loadFutureMeetings();
         //What happens if there is no file to load? Check for in loaContacts
        // highestContactId = 0; -- this should be set in loadContacts
     }
@@ -403,6 +404,7 @@ public class  ContactManagerImpl implements ContactManager {
     public void flush(){
        flushContacts(); 
        flushPastMeetings();
+       flushFutureMeetings();
     }
 
     private void flushContacts(){
@@ -512,7 +514,6 @@ public class  ContactManagerImpl implements ContactManager {
             while((line = br.readLine()) != null) {
                 Matcher matcher = pattern.matcher(line);
                 if(matcher.matches()){
-                    System.out.println("------------------");
                     int entryId = Integer.parseInt(matcher.group(1));
                     System.out.println("entryId" + entryId);
                     //load date
@@ -524,7 +525,6 @@ public class  ContactManagerImpl implements ContactManager {
                         e.printStackTrace();
                     }
                     //load contacts
-                    System.out.println("-----loading at 50%---------");
                     List<String> contactList = Arrays.asList(matcher.group(3).split(","));
                     Set<Contact> meetContacts = new LinkedHashSet();
                     for (String s : contactList){
@@ -535,7 +535,6 @@ public class  ContactManagerImpl implements ContactManager {
                     String notesFile = matcher.group(4).replace("\\n", "\n");
                     PastMeeting newPastMeeting  = new PastMeetingImpl( entryId, calendarFile, meetContacts, notesFile);
                     pastMeetings.add(newPastMeeting);
-                    System.out.println("-----loading at 100%------RESO---");
                     System.out.println(newPastMeeting);
                 } else {
                     System.out.println("Could not load line:" + line);
@@ -558,7 +557,7 @@ public class  ContactManagerImpl implements ContactManager {
             int id;
             String name;
             String notes;
-            Pattern pattern = Pattern.compile("^\"(\\d+)\",\"(.*)\",\"(.*)\",\"$");
+            Pattern pattern = Pattern.compile("^\"(\\d+)\",\"(.*)\",\"(.*)\"$");
             String line = br.readLine(); //discard first line
             int highestIdInFile = -1;
             while((line = br.readLine()) != null) {
@@ -583,10 +582,10 @@ public class  ContactManagerImpl implements ContactManager {
                         Set<Contact> c = getContacts(Integer.parseInt(s));
                         meetContacts.addAll(c);
                     }
-                    FutureMeeting newPastMeeting  = new FutureMeetingImpl( entryId, calendarFile, meetContacts);
+                    FutureMeeting newFutureMeeting  = new FutureMeetingImpl( entryId, calendarFile, meetContacts);
                     futureMeetings.add(newFutureMeeting);
                     System.out.println("-----loading at 100%------RESO---");
-                    System.out.println(futurePastMeeting);
+                    System.out.println(newFutureMeeting);
                 } else {
                     System.out.println("Could not load line:" + line);
                 }
@@ -601,8 +600,8 @@ public class  ContactManagerImpl implements ContactManager {
         } catch  (IOException ex) {
             ex.printStackTrace();
         }
+    }
     /**
-dd
     *Method to inject future or past meeting for testing only
     *
     *

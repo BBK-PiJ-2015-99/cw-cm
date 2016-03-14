@@ -66,6 +66,13 @@ public class ContactManagerImplTest {
         } catch (IOException io){
             
         } 
+        try{
+            File f = new File("FutureMeetings.csv");
+            boolean result = Files.deleteIfExists(f.toPath());
+            if(result)
+                System.out.println("Deleted an existing Contacts file.");
+        } catch (IOException io){
+           } 
         cm = new ContactManagerImpl();
     }
 
@@ -456,10 +463,6 @@ public class ContactManagerImplTest {
 
         SimpleDateFormat df = new SimpleDateFormat();
         df.applyPattern("dd/MM/yyyy");
-        System.out.println("**********");
-        System.out.println(pm);
-        System.out.println(df.format(pm.getDate().getTime()) + "~~~~~~~~~~~~~~" );
-        System.out.println("~~~~~~~~~~~~~~" + df.format(calLast.getTime()));
         assertEquals(calLast, pm.getDate());
     }
     
@@ -473,6 +476,8 @@ public class ContactManagerImplTest {
         cm.flush();
         ContactManager cm2 = new ContactManagerImpl();
         FutureMeeting fm = cm2.getFutureMeeting(3);
+        System.out.println("----->");
+        System.out.println(fm);
         assertEquals(calLast3, fm.getDate());
     }
 }
