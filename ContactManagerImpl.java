@@ -169,27 +169,32 @@ public class  ContactManagerImpl implements ContactManager {
     * @throws NullPointerException if the date are null
     */
     public List<Meeting> getMeetingListOn(Calendar date){
-        
-        Set<Meeting> returnSet = new HashSet();
+       
+        if(date == null){
+            throw new NullPointerException("Date supplied is null");
+        }
+         
+        Set<Meeting> returnSet = new LinkedHashSet();
         for(PastMeeting pm : pastMeetings){
             if (date == pm.getDate()){
                 returnSet.add(pm);
             }
         } 
         for(FutureMeeting fm : futureMeetings){
-            if (date == pm.getDate()){
+            if (date == fm.getDate()){
                 returnSet.add(fm);
             }
         }
 
 
-        Collections.sort( returnSet,  new Comparator<Meeting>(){
+        List<Meeting> returnList = new LinkedList(returnSet); 
+        Collections.sort( returnList,  new Comparator<Meeting>(){
                 @Override
                 public int compare(Meeting m1, Meeting m2){
                     return (int) m1.getDate().compareTo(m2.getDate());
                 }
         });
-        return dummySet;
+        return returnList;
     }
 
     /**
