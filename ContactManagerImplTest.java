@@ -393,5 +393,29 @@ public class ContactManagerImplTest {
         assertTrue(meetingsOn1.size()==2);
         assertTrue(meetingsOn2.size()==2);
     }
+
+    @Test
+    public void getMeetings(){
+
+
+        Calendar calSoonest1 = Calendar.getInstance();
+        Calendar calLast3 = Calendar.getInstance();
+        calSoonest1.set(2017,1,2);
+        calLast3.set(2017,10,1);
+        addMeetingsJohn3(calSoonest1, calSoonest1 ,calLast3, false);
+
+        Calendar calSoonest = Calendar.getInstance();
+        Calendar calMiddle = Calendar.getInstance();
+        Calendar calLast = Calendar.getInstance();
+        calSoonest.set(2015,1,2);
+        calLast.set(2015,10,1);
+        addMeetingsJohn3(calSoonest, calSoonest ,calLast, true);
+        
+        Meeting m1 = getMeeting(1);
+        Meeting m2 = getMeeting(5);
+
+        AssertEquals(calSoonest1, m1.getDate());
+        AssertEquals(calSoonest, m2.getDate());
+    }
 }
 
