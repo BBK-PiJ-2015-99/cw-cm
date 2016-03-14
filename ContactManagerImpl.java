@@ -28,13 +28,12 @@ public class  ContactManagerImpl implements ContactManager {
     private List<PastMeeting> pastMeetings; 
     private List<Contact> contacts;
     private int highestContactId;
-    private int highestFutureMeetingId;
-    private int highestPastMeetingId;
+    private int highestMeetingId;
 
 
     public ContactManagerImpl(){
         highestContactId = 0;
-        highestFutureMeetingId = 0;
+        highestMeetingId = 0;
         contacts = new LinkedList();
         futureMeetings = new LinkedList();
         pastMeetings = new LinkedList();
@@ -57,7 +56,7 @@ public class  ContactManagerImpl implements ContactManager {
     * @throws NullPointerException if the meeting or the date are null
     */
     public int addFutureMeeting(Set<Contact> contacts, Calendar date){
-        int newHighestFutureMeetingId = highestFutureMeetingId + 1;
+        int newHighestFutureMeetingId = highestMeetingId + 1;
         if (date == null)
             throw new NullPointerException("Date supplied is null");
         Locale locale1 = Locale.UK;
@@ -69,7 +68,7 @@ public class  ContactManagerImpl implements ContactManager {
             throw new IllegalArgumentException("Unknown contact used in FutureMeeting");
         FutureMeeting fm = new FutureMeetingImpl(newHighestFutureMeetingId, date, contacts);
         futureMeetings.add(fm);
-        highestFutureMeetingId = newHighestFutureMeetingId;
+        highestMeetingId = newHighestFutureMeetingId;
         return newHighestFutureMeetingId;    
     }
     /**
@@ -84,9 +83,9 @@ public class  ContactManagerImpl implements ContactManager {
     */
     public PastMeeting getPastMeeting(int id){
         for (FutureMeeting fm : futureMeetings ){
-            System.out.println("Checking this past  meeting:" + fm.getId());
+            System.out.println("Checking this future meeting:" + fm.getId());
             if (fm.getId() == id){
-                throw new IllegalArgumentException("The future meeting requested is in the past");
+                throw new IllegalArgumentException("The past meeting requested is in the past:" + fm.getId() + "-" + id);
             }
         }
         PastMeeting pm = null;
@@ -109,7 +108,7 @@ public class  ContactManagerImpl implements ContactManager {
         for (PastMeeting pm : pastMeetings ){
             System.out.println("Checking this past  meeting:" + pm.getId());
             if (pm.getId() == id){
-                throw new IllegalArgumentException("The future meeting requested is in the past");
+                throw new IllegalArgumentException("The future1111 meeting requested is in the past" + pm.getId() + "-" + id);
             }
         }
         FutureMeeting fm = null;
@@ -170,6 +169,7 @@ public class  ContactManagerImpl implements ContactManager {
     * @throws NullPointerException if the date are null
     */
     public List<Meeting> getMeetingListOn(Calendar date){
+        
         List<Meeting> dummySet = new LinkedList(); 
         return dummySet;
     }
@@ -250,10 +250,10 @@ public class  ContactManagerImpl implements ContactManager {
         if(contacts.size() == 0 || !(this.contacts.containsAll(contacts)))
             throw new IllegalArgumentException("Contacts size is null or unknown contact in supplied");
         
-        int newHighestPastMeetingId = highestPastMeetingId +1;
+        int newHighestPastMeetingId = highestMeetingId +1;
         PastMeeting pm = new PastMeetingImpl(newHighestPastMeetingId,date, contacts, text ); 
         pastMeetings.add(pm);
-        highestPastMeetingId = newHighestPastMeetingId;
+        highestMeetingId = newHighestPastMeetingId;
     }
     /**
     * Add notes to a meeting.

@@ -12,6 +12,8 @@ import java.util.LinkedHashSet;
 import java.util.Calendar; 
 import java.util.Locale;
 import java.util.TimeZone;
+import java.util.List;
+import java.util.ArrayList;
 
 public class ContactManagerImplTest {
 
@@ -330,6 +332,66 @@ public class ContactManagerImplTest {
         assertEquals(calSoonest, fm.getDate());
         assertEquals(calMiddle, fm2.getDate());
         assertEquals(calLast, fm3.getDate());
+    }
+
+    @Test
+    public void globalMeetingIdPastMeeting(){
+        
+        Calendar calSoonest = Calendar.getInstance();
+        Calendar calMiddle = Calendar.getInstance();
+        Calendar calLast = Calendar.getInstance();
+        calSoonest.set(2015,1,2);
+        calMiddle.set(2015,6,7);
+        calLast.set(2015,10,1);
+        addMeetingsJohn3(calSoonest, calMiddle ,calLast, true);
+
+        Calendar calSoonest1 = Calendar.getInstance();
+        Calendar calMiddle2 = Calendar.getInstance();
+        Calendar calLast3 = Calendar.getInstance();
+        calSoonest1.set(2017,1,2);
+        calMiddle2.set(2017,6,7);
+        calLast3.set(2017,10,1);
+        addMeetingsJohn3(calSoonest1, calMiddle2 ,calLast3, false);
+        
+        PastMeeting fm = cm.getPastMeeting(1); 
+        FutureMeeting fm2 = cm.getFutureMeeting(4); 
+        //assertEquals(calSoonest, fm.getDate());
+        //assertEquals(calSoonest1, fm2.getDate());
+    }
+    
+    @Test(expected=NullPointerException.class)
+    public void getMeetingOnDateIsNull(){
+        List<Meeting> lm = cm.getMeetingListOn(null);
+    }
+
+    @Test
+    public void getMeetingOnDateIsEmpty(){
+        List<Meeting> empty = new ArrayList();
+        Calendar calSoonest = Calendar.getInstance();
+        calSoonest.set(2017,1,2);
+        List<Meeting> lm = cm.getMeetingListOn(calSoonest);
+        assertEquals(empty, lm);
+    }
+
+
+    @Test
+    public void getMeetingListOnFutPast(){ 
+        Calendar calSoonest1 = Calendar.getInstance();
+        Calendar calLast3 = Calendar.getInstance();
+        calSoonest1.set(2017,1,2);
+        calLast3.set(2017,10,1);
+        addMeetingsJohn3(calSoonest1, calSoonest1 ,calLast3, false);
+
+        Calendar calSoonest = Calendar.getInstance();
+        Calendar calMiddle = Calendar.getInstance();
+        Calendar calLast = Calendar.getInstance();
+        calSoonest.set(2015,1,2);
+        calLast.set(2015,10,1);
+        addMeetingsJohn3(calSoonest, calSoonest ,calLast, true);
+        List<Meeting> meetingsOn1 = cm.getMeetingListOn(calSoonest);
+        List<Meeting> meetingsOn2 = cm.getMeetingListOn(calSoonest1);
+        assertTrue(meetingsOn1.size()==2);
+        assertTrue(meetingsOn2.size()==2);
     }
 }
 
