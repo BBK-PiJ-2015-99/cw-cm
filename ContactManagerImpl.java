@@ -170,7 +170,25 @@ public class  ContactManagerImpl implements ContactManager {
     */
     public List<Meeting> getMeetingListOn(Calendar date){
         
-        List<Meeting> dummySet = new LinkedList(); 
+        Set<Meeting> returnSet = new HashSet();
+        for(PastMeeting pm : pastMeetings){
+            if (date == pm.getDate()){
+                returnSet.add(pm);
+            }
+        } 
+        for(FutureMeeting fm : futureMeetings){
+            if (date == pm.getDate()){
+                returnSet.add(fm);
+            }
+        }
+
+
+        Collections.sort( returnSet,  new Comparator<Meeting>(){
+                @Override
+                public int compare(Meeting m1, Meeting m2){
+                    return (int) m1.getDate().compareTo(m2.getDate());
+                }
+        });
         return dummySet;
     }
 
