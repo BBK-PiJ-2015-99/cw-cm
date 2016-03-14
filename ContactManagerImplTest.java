@@ -58,6 +58,14 @@ public class ContactManagerImplTest {
         } catch (IOException io){
             
         } 
+        try{
+            File f = new File("PastMeetings.csv");
+            boolean result = Files.deleteIfExists(f.toPath());
+            if(result)
+                System.out.println("Deleted an existing Contacts file.");
+        } catch (IOException io){
+            
+        } 
         cm = new ContactManagerImpl();
     }
 
@@ -396,8 +404,6 @@ public class ContactManagerImplTest {
 
     @Test
     public void getMeetings(){
-
-
         Calendar calSoonest1 = Calendar.getInstance();
         Calendar calLast3 = Calendar.getInstance();
         calSoonest1.set(2017,1,2);
@@ -418,6 +424,56 @@ public class ContactManagerImplTest {
         assertEquals(calSoonest1, m1.getDate());
         assertEquals(calSoonest, m2.getDate());
         assertEquals(null, m3);
+    }
+    
+    @Test
+    public void addNotes(){
+        Calendar calSoonest1 = Calendar.getInstance();
+        Calendar calLast3 = Calendar.getInstance();
+        calSoonest1.set(2017,1,2);
+        calLast3.set(2017,10,1);
+        addMeetingsJohn3(calSoonest1, calSoonest1 ,calLast3, false);
+        cm.addMeetingNotes(3, "The notes that break!");
+        PastMeeting pm = cm.getPastMeeting(3);
+        assertEquals(calLast3, pm.getDate());
+        assertEquals("The notes that break!", pm.getNotes());
+    }
+
+    @Test
+    public void flushPastMeetings(){
+
+        Calendar calSoonest = Calendar.getInstance();
+        Calendar calMiddle = Calendar.getInstance();
+        Calendar calLast = Calendar.getInstance();
+        calSoonest.set(2015,1,2);
+        calLast.set(2015,10,1);
+        addMeetingsJohn3(calSoonest, calSoonest ,calLast, true);
+
+        cm.flush();
+        ContactManager cm2 = new ContactManagerImpl();
+        
+        PastMeeting pm = cm2.getPastMeeting(3);
+
+        SimpleDateFormat df = new SimpleDateFormat();
+        df.applyPattern("dd/MM/yyyy");
+        System.out.println("**********");
+        System.out.println(pm);
+        System.out.println(df.format(pm.getDate().getTime()) + "~~~~~~~~~~~~~~" );
+        System.out.println("~~~~~~~~~~~~~~" + df.format(calLast.getTime()));
+        assertEquals(calLast, pm.getDate());
+    }
+    
+    @Test
+    public void flushFutureMeeting(){
+        Calendar calSoonest1 = Calendar.getInstance();
+        Calendar calLast3 = Calendar.getInstance();
+        calSoonest1.set(2017,1,2);
+        calLast3.set(2017,10,1);
+        addMeetingsJohn3(calSoonest1, calSoonest1 ,calLast3, false);
+        cm.flush();
+        ContactManager cm2 = new ContactManagerImpl();
+        FutureMeeting fm = cm2.getFutureMeeting(3);
+        assertEquals(calLast3, fm.getDate());
     }
 }
 

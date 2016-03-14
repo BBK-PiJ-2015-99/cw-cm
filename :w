@@ -1,6 +1,3 @@
-import java.text.ParseException;
-import java.util.Locale;
-import java.util.Arrays;
 import java.util.Iterator;
 import java.text.SimpleDateFormat;
 import java.util.Comparator;
@@ -43,7 +40,6 @@ public class  ContactManagerImpl implements ContactManager {
         pastMeetings = new LinkedList();
         //TODO: add contacts from file. Get highest ID
         loadContacts();
-        loadPastMeetings();
         //What happens if there is no file to load? Check for in loaContacts
        // highestContactId = 0; -- this should be set in loadContacts
     }
@@ -88,6 +84,7 @@ public class  ContactManagerImpl implements ContactManager {
     */
     public PastMeeting getPastMeeting(int id){
         for (FutureMeeting fm : futureMeetings ){
+            System.out.println("Checking this future meeting:" + fm.getId());
             if (fm.getId() == id){
                 throw new IllegalArgumentException("The past meeting requested is in the past:" + fm.getId() + "-" + id);
             }
@@ -110,6 +107,7 @@ public class  ContactManagerImpl implements ContactManager {
     public FutureMeeting getFutureMeeting(int id){
         // TODO -- Dummy code 
         for (PastMeeting pm : pastMeetings ){
+            System.out.println("Checking this past  meeting:" + pm.getId());
             if (pm.getId() == id){
                 throw new IllegalArgumentException("The future1111 meeting requested is in the past" + pm.getId() + "-" + id);
             }
@@ -321,14 +319,10 @@ public class  ContactManagerImpl implements ContactManager {
         if(fmToGet == null){
             throw new IllegalArgumentException("The meeting id does not exist");
         }
-        SimpleDateFormat sdf = new SimpleDateFormat();
-        sdf.applyPattern("dd/MM/yyyy");
         Calendar now = Calendar.getInstance();
-        /*System.out.println("---" + sdf.format(now)) ;
-        System.out.println("---" + sdf.format(fmToGet.getDate()) );
         if(fmToGet.getDate().compareTo(now)>1){
-            throw new IllegalStateException("The meetings to add notes to is in the future!");
-        } TODO - remove the comments around this block*/
+            throw new IllegalStateException("The meetings to add notes to is in teh future!");
+        }
         PastMeeting newPastMeeting = new PastMeetingImpl(fmToGet.getId(), fmToGet.getDate(), fmToGet.getContacts(), text);
         pastMeetings.add(newPastMeeting);
         return newPastMeeting;
@@ -402,7 +396,6 @@ public class  ContactManagerImpl implements ContactManager {
     */
     public void flush(){
        flushContacts(); 
-       flushPastMeetings();
     }
 
     private void flushContacts(){
@@ -419,58 +412,6 @@ public class  ContactManagerImpl implements ContactManager {
         } catch ( FileNotFoundException ex) {
             System.out.println("Can't open file (Contacts.csv) to write contacts.");
         }
-    }
-
-    private void flushPastMeetings(){
-        StringBuilder fileContents = new StringBuilder();
-        fileContents.append("`id`,`date`,`notes`,`contacts`,`notes`".replace('`','"' ) + System.lineSeparator());
-        
-        for(PastMeeting pm: pastMeetings){
-            String idList = "";
-            for(Contact meetingContact : pm.getContacts()){
-                idList = idList + meetingContact.getId() + ",";
-            }
-            SimpleDateFormat sdf = new SimpleDateFormat();
-            sdf.applyPattern("dd/MM/yyyy H:m:s:S");
-            fileContents.append("\"" + pm.getId()  + "\",");
-            //fileContents.append("\"" + contacts.get(i).getName().replace("\n", "\\n")  + "\",");
-            fileContents.append("\"" + sdf.format(pm.getDate().getTime())  + "\",");
-            fileContents.append("\"" + idList  + "\",");
-            fileContents.append("\"" + pm.getNotes().replace("\n", "\\n")  + "\"" + System.lineSeparator());
-        } 
-        try(PrintWriter writer = new PrintWriter("PastMeetings.csv")){
-            writer.print(fileContents);
-            writer.flush();        
-        } catch ( FileNotFoundException ex) {
-            System.out.println("Can't open file (PastMeetings.csv) to write contacts.");
-        }
-    }
-
-
-    private void flushFutureMeetings(){
-        StringBuilder fileContents = new StringBuilder();
-        fileContents.append("`id`,`date`,`notes`,`contacts`".replace('`','"' ) + System.lineSeparator());
-        
-        for(PastMeeting pm: pastMeetings){
-            String idList = "";
-            for(Contact meetingContact : pm.getContacts()){
-                idList = idList + meetingContact.getId() + ",";
-            }
-            SimpleDateFormat sdf = new SimpleDateFormat();
-            sdf.applyPattern("dd/MM/yyyy H:m:s:S");
-            fileContents.append("\"" + pm.getId()  + "\",");
-            //fileContents.append("\"" + contacts.get(i).getName().replace("\n", "\\n")  + "\",");
-            fileContents.append("\"" + sdf.format(pm.getDate().getTime())  + "\",");
-            fileContents.append("\"" + idList  + "\",");
-            fileContents.append("\"" + pm.getNotes().replace("\n", "\\n")  + "\"" + System.lineSeparator());
-        } 
-        try(PrintWriter writer = new PrintWriter("PastMeetings.csv")){
-            writer.print(fileContents);
-            writer.flush();        
-        } catch ( FileNotFoundException ex) {
-            System.out.println("Can't open file (PastMeetings.csv) to write contacts.");
-        }
-
     }
 
     private void loadContacts(){
@@ -502,57 +443,6 @@ public class  ContactManagerImpl implements ContactManager {
         }
     }
 
-    private void loadPastMeetings(){
-        try(BufferedReader br = new BufferedReader(new FileReader("PastMeetings.csv"))){
-            int id;
-            String name;
-            String notes;
-            Pattern pattern = Pattern.compile("^\"(\\d+)\",\"(.*)\",\"(.*)\",\"(.*)\"$");
-            String line = br.readLine(); //discard first line
-            int highestIdInFile = -1;
-            while((line = br.readLine()) != null) {
-                Matcher matcher = pattern.matcher(line);
-                if(matcher.matches()){
-                    System.out.println("------------------");
-                    int entryId = Integer.parseInt(matcher.group(1));
-                    System.out.println("entryId" + entryId);
-                    //load date
-                    Calendar calendarFile = Calendar.getInstance();
-                    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy H:m:s:S");
-                    try {
-                        calendarFile.setTime(sdf.parse(matcher.group(2)));
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                    }
-                    //load contacts
-                    System.out.println("-----loading at 50%---------");
-                    List<String> contactList = Arrays.asList(matcher.group(3).split(","));
-                    Set<Contact> meetContacts = new LinkedHashSet();
-                    for (String s : contactList){
-                        Set<Contact> c = getContacts(Integer.parseInt(s));
-                        meetContacts.addAll(c);
-                    }
-                    //load notes
-                    String notesFile = matcher.group(4).replace("\\n", "\n");
-                    PastMeeting newPastMeeting  = new PastMeetingImpl( entryId, calendarFile, meetContacts, notesFile);
-                    pastMeetings.add(newPastMeeting);
-                    System.out.println("-----loading at 100%------RESO---");
-                    System.out.println(newPastMeeting);
-                } else {
-                    System.out.println("Could not load line:" + line);
-                }
-            }
-            if(highestMeetingId == 0){
-                highestMeetingId = highestIdInFile;
-            }else if (highestMeetingId < highestIdInFile){
-                highestMeetingId = highestIdInFile;
-            }
-        } catch (FileNotFoundException ex) {
-            //do nothing -- there is no file yet to read. 
-        } catch  (IOException ex) {
-            ex.printStackTrace();
-        }
-    }
     /**
     *Method to inject future or past meeting for testing only
     *
