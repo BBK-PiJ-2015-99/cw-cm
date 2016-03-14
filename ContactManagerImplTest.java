@@ -411,11 +411,13 @@ public class ContactManagerImplTest {
         calLast.set(2015,10,1);
         addMeetingsJohn3(calSoonest, calSoonest ,calLast, true);
         
-        Meeting m1 = getMeeting(1);
-        Meeting m2 = getMeeting(5);
+        Meeting m1 = cm.getMeeting(1);
+        Meeting m2 = cm.getMeeting(5);
+        Meeting m3 = cm.getMeeting(99);
 
-        AssertEquals(calSoonest1, m1.getDate());
-        AssertEquals(calSoonest, m2.getDate());
+        assertEquals(calSoonest1, m1.getDate());
+        assertEquals(calSoonest, m2.getDate());
+        assertEquals(null, m3);
     }
 }
 
